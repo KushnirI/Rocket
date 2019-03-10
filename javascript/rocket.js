@@ -6,6 +6,9 @@ canvas.height = canvasHeight;
 
 var ctx = canvas.getContext("2d");
 
+var updateTime = 30;
+var zeroCordinate = 0;
+
 function Rocket(fileName, x, y){
 	var me = this;
 	this.x = x;
@@ -29,7 +32,7 @@ function Rocket(fileName, x, y){
 	this.image = new Image();
 	this.image.onload = function(){
 		me.loaded = true;
-	};
+	};  
 	this.image.src = fileName;
 	
 	this.setPosition = function(newX, newY){
@@ -42,17 +45,17 @@ function Rocket(fileName, x, y){
 		me.x += Math.cos(me.angle - Math.PI/2) * step;
 		me.y += Math.sin(me.angle - Math.PI/2) * step;
 		
-		if(me.x < 0) {
+		if(me.x < zeroCordinate) {
 			me.x = 0;
 		}
-		if(me.y < 0) {
+		if(me.y < zeroCordinate) {
 			me.y = 0;
 		}
-		if(me.x > 700 - me.width) {
-			me.x = 700 - me.width;
+		if(me.x > canvasWidth - me.width) {
+			me.x = canvasWidth - me.width;
 		}
-		if(me.y > 450 - me.height) {
-			me.y = 450 - me.height;
+		if(me.y > canvasHeight - me.height) {
+			me.y = canvasHeight - me.height;
 		}
 	};
 	
@@ -78,31 +81,33 @@ function Rocket(fileName, x, y){
 	
 	this.draw = function(ctx){
 		if(me.loaded){
+			var widthCenter = me.width/2;
+			var heightCenter = me.height/2;
 			ctx.save();
-			ctx.translate(me.x + me.width/2, me.y + me.height/2);
+			ctx.translate(me.x + widthCenter, me.y + heightCenter);
 			ctx.rotate(me.angle);
-			ctx.drawImage(me.image, -me.width/2, -me.height/2, me.width, me.height);
+			ctx.drawImage(me.image, -widthCenter, -heightCenter, me.width, me.height);
 			ctx.restore();		
 		}
 	};
 }
 
-var rocket = new Rocket('images/rocket.png', 50, 50);
+var rocket = new Rocket("images/rocket.png");
 
 
 
 setInterval(function(){
-	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+	ctx.clearRect(zeroCordinate, zeroCordinate, canvasWidth, canvasHeight);
 	rocket.update();
 	rocket.draw(ctx);
-},30);
+},updateTime);
 
 
-document.addEventListener('keydown', function(event){
+document.addEventListener("keydown", function(event){
 	rocket.setKey(event.keyCode, true);
 });
 
-document.addEventListener('keyup', function(event){
+document.addEventListener("keyup", function(event){
 	rocket.setKey(event.keyCode, false);
 });
 
