@@ -1,23 +1,19 @@
-var canvas = document.getElementById("canvas");
-var canvasWidth = 700;
-var canvasHeight = 450;
-canvas.width = canvasWidth;
-canvas.height = canvasHeight;
-
-var ctx = canvas.getContext("2d");
-
-var updateTime = 30;
-var zeroCordinate = 0;
-
+// eslint-disable-next-line no-unused-vars
 function Rocket(fileName, x, y){
 	var me = this;
 	this.x = x;
 	this.y = y;
-	this.width = 80;
-	this.height = 80;
+	this.width = 90;
+	this.height = 90;
+	this.radius = me.width/2;
+	this.type = "rocket";
+	this.dx = me.x + me.width/2;
+	this.dy = me.y + me.height/2;
+	this.shouldDraw = true;
+	
 	this.loaded = false;
 	this.angle = 0;
-	this.speed = 3;
+	this.speed = 4;
 	this.angleStep = 0.1;
 	this.controls = {
 		key37 : false,
@@ -40,11 +36,10 @@ function Rocket(fileName, x, y){
 		me.y = newY;
 	};
 	
-
 	this.move = function(step){
 		me.x += Math.cos(me.angle - Math.PI/2) * step;
 		me.y += Math.sin(me.angle - Math.PI/2) * step;
-		
+	
 		if(me.x < zeroCordinate) {
 			me.x = 0;
 		}
@@ -77,12 +72,17 @@ function Rocket(fileName, x, y){
 		if(me.controls.key39){
 			me.changeAngle(me.angleStep);
 		}
+		
+		me.dx = me.x + me.width/2;
+		me.dy = me.y + me.height/2;
+		
 	};
 	
 	this.draw = function(ctx){
 		if(me.loaded){
 			var widthCenter = me.width/2;
 			var heightCenter = me.height/2;
+			
 			ctx.save();
 			ctx.translate(me.x + widthCenter, me.y + heightCenter);
 			ctx.rotate(me.angle);
@@ -92,36 +92,54 @@ function Rocket(fileName, x, y){
 	};
 }
 
-var rocket = new Rocket("images/rocket.png");
-
-
-
-setInterval(function(){
-	ctx.clearRect(zeroCordinate, zeroCordinate, canvasWidth, canvasHeight);
-	rocket.update();
-	rocket.draw(ctx);
-},updateTime);
-
-
-document.addEventListener("keydown", function(event){
-	rocket.setKey(event.keyCode, true);
-});
-
-document.addEventListener("keyup", function(event){
-	rocket.setKey(event.keyCode, false);
-});
-
-
-rocket.setPosition(canvasWidth-rocket.width, canvasHeight - rocket.height);
-
-
-
-
-
-
-
-
-
-
-
+// eslint-disable-next-line no-unused-vars
+function Bullet(params){
+	var me = this;
+	this.x = params[0];
+	this.y = params[1];
+	this.speed = 6;
+	this.width = 18;
+	this.height = 18;
+	this.radius = me.width/2;
+	this.type = "bullet";
+	
+	this.dx = me.x + me.width/2;
+	this.dy = me.y + me.height/2;
+	this.angle = params[2];
+	this.loaded = false;
+	this.shouldDraw = true;
+		
+	this.image = new Image();
+	this.image.onload = function(){
+		me.loaded = true;
+	};  
+	this.image.src = "images/bullet.png";
+	
+	this.move = function(){
+		me.x = me.x + Math.cos(me.angle - Math.PI/2) * me.speed;
+		me.y = me.y + Math.sin(me.angle - Math.PI/2) * me.speed;
+		me.dx = me.x + me.width/2;
+		me.dy = me.y + me.height/2;
+	};
+	
+	this.update = function(){
+		me.move();
+		if(me.x > canvasWidth * 2 || me.y > canvasHeight *2 ||me.x < -canvasWidth || me.y < -canvasHeight) {
+		me.shouldDraw = false;	
+		}
+	};
+	
+	this.draw = function(ctx){
+		if(me.loaded){
+			var widthCenter = me.width/2;
+			var heightCenter = me.height/2;
+			
+			ctx.save();
+			ctx.translate(me.x + widthCenter, me.y + heightCenter);
+			ctx.rotate(me.angle);
+			ctx.drawImage(me.image, -widthCenter, -heightCenter, me.width, me.height);
+			ctx.restore();		
+		}
+	};
+}
 
