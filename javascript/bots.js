@@ -44,7 +44,7 @@ function Circle(x, y, radius){
 		context.save();
 		context.strokeStyle = me.strokeColor;
 		context.lineWidth = me.lineWidth;
-		
+		// eslint-disable-next-line no-magic-numbers
 		context.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
 		context.stroke();
 		
@@ -110,8 +110,11 @@ function Bot(x, y, width, height){
 	
 	this.width = width;
 	this.height = height;
+	// eslint-disable-next-line no-magic-numbers
 	this.x = x + me.width/2;
+	// eslint-disable-next-line no-magic-numbers
 	this.y = y + me.height/2;
+	// eslint-disable-next-line no-magic-numbers
 	this.radius = me.width/2;
 	
 	this.type = "bot";
@@ -123,13 +126,14 @@ function Bot(x, y, width, height){
 		me.loaded = true;
 	};
 	this.image.src = "images/bot.png";
-	
+	// eslint-disable-next-line no-magic-numbers
 	this.healthLineGreen = new Rectangle(me.x - me.width/2, me.y + me.height/2, me.width, 10, "green");
 	
-	
+	// eslint-disable-next-line no-magic-numbers
 	this.healthLineRed = new Rectangle(me.x - me.width/2, me.y + me.height/2, 0, 10, "red");
 	
 	this.getDemage = function() {
+		// eslint-disable-next-line no-magic-numbers
 		me.healthLineRed.width += me.width/5;
 		if (me.healthLineRed.width >= me.width) {
 			me.shouldDraw = false;
@@ -143,6 +147,7 @@ function Bot(x, y, width, height){
 	this.draw = function(ctx){
 		if(me.loaded){
 			ctx.save();
+			// eslint-disable-next-line no-magic-numbers
 			ctx.drawImage(me.image, me.x - me.width/2, me.y - me.height/2, me.width, me.height);
 			me.healthLineGreen.draw(ctx);
 			me.healthLineRed.draw(ctx);

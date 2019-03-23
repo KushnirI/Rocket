@@ -4,9 +4,12 @@ function Rocket(fileName, x, y){
 	
 	this.width = 90;
 	this.height = 90;
+	// eslint-disable-next-line no-magic-numbers
 	this.radius = me.width/2;
 	this.type = "rocket";
+	// eslint-disable-next-line no-magic-numbers
 	this.x = x + me.width/2;
+	// eslint-disable-next-line no-magic-numbers
 	this.y = y + me.height/2;
 	this.shouldDraw = true;
 	
@@ -35,7 +38,9 @@ function Rocket(fileName, x, y){
 	 * @param {number} newY New y position
 	 */
 	this.setPosition = function(newX, newY){
+		// eslint-disable-next-line no-magic-numbers
 		me.x = newX + me.width/2;
+		// eslint-disable-next-line no-magic-numbers
 		me.y = newY + me.height/2;
 	};
 	/**
@@ -43,20 +48,29 @@ function Rocket(fileName, x, y){
 	 * @param {number} step one frame displacement
 	 */
 	this.move = function(step){
+		// eslint-disable-next-line no-magic-numbers
 		me.x += Math.cos(me.angle - Math.PI/2) * step;
+		// eslint-disable-next-line no-magic-numbers
 		me.y += Math.sin(me.angle - Math.PI/2) * step;
 	
+		// eslint-disable-next-line no-magic-numbers
 		if(me.x < me.width/2) {
+			// eslint-disable-next-line no-magic-numbers
 			me.x = me.width/2;
 		}
+		// eslint-disable-next-line no-magic-numbers
 		if(me.y < me.height/2) {
+			// eslint-disable-next-line no-magic-numbers
 			me.y = me.height/2;
 		}
-		
+		// eslint-disable-next-line no-magic-numbers
 		if(me.x > canvasWidth - me.width/2) {
+			// eslint-disable-next-line no-magic-numbers
 			me.x = canvasWidth - me.width/2;
 		}
+		// eslint-disable-next-line no-magic-numbers
 		if(me.y > canvasHeight - me.height/2) {
+			// eslint-disable-next-line no-magic-numbers
 			me.y = canvasHeight - me.height/2;
 		}
 	};
@@ -87,12 +101,11 @@ function Rocket(fileName, x, y){
 	
 	this.draw = function(ctx){
 		if(me.loaded){
-			/*var widthCenter = me.width/2;
-			var heightCenter = me.height/2;*/
-			
+						
 			ctx.save();
 			ctx.translate(me.x, me.y);
 			ctx.rotate(me.angle);
+			// eslint-disable-next-line no-magic-numbers
 			ctx.drawImage(me.image, -me.width/2, -me.height/2, me.width, me.height);
 			ctx.restore();		
 		}
@@ -110,6 +123,7 @@ function Bullet(config){
 	
 	this.x = this.getStartX(config.x, config.angle, config.rocketLength);
 	this.y = this.getStartY(config.y, config.angle, config.rocketLength);
+	// eslint-disable-next-line no-magic-numbers
 	this.radius = me.width/2;
 	this.type = "bullet";
 	
@@ -137,9 +151,11 @@ function Bullet(config){
  * @return {number} [[Description]]
 */
 Bullet.prototype.getStartX = function(parentCenterX, parentAngle, parentHalfLength) {
+	// eslint-disable-next-line no-magic-numbers
 	return parentCenterX + Math.cos(parentAngle - Math.PI/2) * parentHalfLength;
 };
 Bullet.prototype.getStartY = function(parentCenterY, parentAngle, parentHalfLength) {
+	// eslint-disable-next-line no-magic-numbers
 	return parentCenterY + Math.sin(parentAngle - Math.PI/2) * parentHalfLength;
 };
 
@@ -151,12 +167,15 @@ Bullet.prototype.getStartY = function(parentCenterY, parentAngle, parentHalfLeng
 };*/
 
 Bullet.prototype.move = function(){
+	// eslint-disable-next-line no-magic-numbers
 	this.x = this.x + Math.cos(this.angle - Math.PI/2) * this.speed;
+	// eslint-disable-next-line no-magic-numbers
 	this.y = this.y + Math.sin(this.angle - Math.PI/2) * this.speed;
 };
 	
 Bullet.prototype.update = function(){
 	this.move();
+	// eslint-disable-next-line no-magic-numbers
 	if(this.x > canvasWidth * 2 || this.y > canvasHeight *2 ||this.x < -canvasWidth || this.y < -canvasHeight) {
 	this.shouldDraw = false;	
 	}
@@ -167,6 +186,7 @@ Bullet.prototype.draw = function(ctx){
 		ctx.save();
 		ctx.translate(this.x, this.y);
 		ctx.rotate(this.angle);
+		// eslint-disable-next-line no-magic-numbers
 		ctx.drawImage(this.image, -this.width/2, -this.height/2, this.width, this.height);
 		ctx.restore();		
 	}

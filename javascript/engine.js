@@ -18,9 +18,8 @@ function collisionCheck() {
 		for(var j = 0; j < collisionDetection.length; j++){
 			if(i !== j){
 				obj2 = collisionDetection[j];
-				
-				dist = Math.sqrt(Math.pow(obj1.x - obj2.x,2)
-								+ Math.pow(obj1.y - obj2.y, 2));
+				// eslint-disable-next-line no-magic-numbers
+				dist = Math.sqrt(Math.pow(obj1.x - obj2.x,2) + Math.pow(obj1.y - obj2.y, 2));
 				if( dist < obj1.radius + obj2.radius){
 					if(obj1.type === "bot" && obj2.type === "bullet"){
 						obj1.getDemage();
@@ -35,12 +34,14 @@ function collisionCheck() {
 function removeUseless() {
 	for(var i = 0; i < drawElements.length; i++){
 		if(!drawElements[i].shouldDraw) {
+			// eslint-disable-next-line no-magic-numbers
 			drawElements.splice(i--, 1);
 		}
 	}
 	
 	for(var j = 0; j < collisionDetection.length; j++){
 		if(!collisionDetection[j].shouldDraw) {
+			// eslint-disable-next-line no-magic-numbers
 			collisionDetection.splice(j--, 1);
 		}
 	}
@@ -50,12 +51,18 @@ var drawElements = [];
 var collisionDetection = [];
 
 //var bots = [new bot >>]
+// eslint-disable-next-line no-magic-numbers
 var bot1 = new Bot(320, 320, 75, 75);
+// eslint-disable-next-line no-magic-numbers
 var bot2 = new Bot(180, 320, 50, 50);
+// eslint-disable-next-line no-magic-numbers
 var bot3 = new Bot(520, 230, 50, 50);
 
+// eslint-disable-next-line no-magic-numbers
 var circle1 = new Circle(100, 100, 20);
+// eslint-disable-next-line no-magic-numbers
 var circle2 = new Circle(300, 300, 35);
+// eslint-disable-next-line no-magic-numbers
 var circle3 = new Circle(400, 180, 15);
 
 
@@ -98,7 +105,9 @@ document.addEventListener("keyup", function(event){
 });
 
 document.addEventListener("keypress", function(event){
+	// eslint-disable-next-line no-magic-numbers
 	if(event.keyCode === 102 || event.keyCode === 1072){
+		// eslint-disable-next-line no-magic-numbers
 		fireEvent("fire", {x: rocket.x, y: rocket.y, angle: rocket.angle, rocketLength: rocket.height/2})
 	}
 });
