@@ -1,8 +1,8 @@
 // eslint-disable-next-line no-unused-vars
 function Circle(x, y, radius){
 	var me = this;
-	this.dx = x;
-	this.dy = y;
+	this.x = x;
+	this.y = y;
 	this.radius = radius;
 	this.type = "bot";
 	this.strokeColor = "grey";
@@ -20,7 +20,7 @@ function Circle(x, y, radius){
 		me.lineWidth = newWidth;
 	};
 	
-	this.setFill = function(boolean){
+	this.enableFill = function(boolean){
 		me.shouldFill = boolean;
 	};
 	
@@ -45,7 +45,7 @@ function Circle(x, y, radius){
 		context.strokeStyle = me.strokeColor;
 		context.lineWidth = me.lineWidth;
 		
-		context.arc(this.dx, this.dy, this.radius, 0, 2*Math.PI);
+		context.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
 		context.stroke();
 		
 		if(me.shouldFill){
@@ -108,13 +108,12 @@ function Rectangle(x, y, width, height, color){
 function Bot(x, y, width, height){
 	var me = this;
 	
-	this.x = x;
-	this.y = y;
 	this.width = width;
 	this.height = height;
+	this.x = x + me.width/2;
+	this.y = y + me.height/2;
 	this.radius = me.width/2;
-	this.dx = me.x + me.width/2;
-	this.dy = me.y + me.height/2;
+	
 	this.type = "bot";
 	this.loaded = false;
 	this.shouldDraw = true;
@@ -125,10 +124,10 @@ function Bot(x, y, width, height){
 	};
 	this.image.src = "images/bot.png";
 	
-	this.healthLineGreen = new Rectangle(me.x, me.y + me.height, me.width, 10, "green");
+	this.healthLineGreen = new Rectangle(me.x - me.width/2, me.y + me.height/2, me.width, 10, "green");
 	
 	
-	this.healthLineRed = new Rectangle(me.x, me.y + me.height, 0, 10, "red");
+	this.healthLineRed = new Rectangle(me.x - me.width/2, me.y + me.height/2, 0, 10, "red");
 	
 	this.getDemage = function() {
 		me.healthLineRed.width += me.width/5;
@@ -144,7 +143,7 @@ function Bot(x, y, width, height){
 	this.draw = function(ctx){
 		if(me.loaded){
 			ctx.save();
-			ctx.drawImage(me.image, me.x, me.y, me.width, me.height);
+			ctx.drawImage(me.image, me.x - me.width/2, me.y - me.height/2, me.width, me.height);
 			me.healthLineGreen.draw(ctx);
 			me.healthLineRed.draw(ctx);
 			ctx.restore();

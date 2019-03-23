@@ -19,8 +19,8 @@ function collisionCheck() {
 			if(i !== j){
 				obj2 = collisionDetection[j];
 				
-				dist = Math.sqrt(Math.pow(obj1.dx - obj2.dx,2)
-								+ Math.pow(obj1.dy - obj2.dy, 2));
+				dist = Math.sqrt(Math.pow(obj1.x - obj2.x,2)
+								+ Math.pow(obj1.y - obj2.y, 2));
 				if( dist < obj1.radius + obj2.radius){
 					if(obj1.type === "bot" && obj2.type === "bullet"){
 						obj1.getDemage();
@@ -49,6 +49,7 @@ function removeUseless() {
 var drawElements = [];
 var collisionDetection = [];
 
+//var bots = [new bot >>]
 var bot1 = new Bot(320, 320, 75, 75);
 var bot2 = new Bot(180, 320, 50, 50);
 var bot3 = new Bot(520, 230, 50, 50);
@@ -98,7 +99,7 @@ document.addEventListener("keyup", function(event){
 
 document.addEventListener("keypress", function(event){
 	if(event.keyCode === 102 || event.keyCode === 1072){
-		fireEvent("fire", [rocket.dx -8, rocket.dy -8, rocket.angle])
+		fireEvent("fire", {x: rocket.x, y: rocket.y, angle: rocket.angle, rocketLength: rocket.height/2})
 	}
 });
 
@@ -110,12 +111,9 @@ var events = {
 };
 
 addListener("fire", 
-	function(params){
-		var bullet = new Bullet(params);
-		drawElements.push(bullet);
-		collisionDetection.push(bullet);
+	function(config){
+		new Bullet(config);
 	}
-		
 );
 
 function addListener(eventName,functionCallback) {

@@ -1,14 +1,13 @@
 // eslint-disable-next-line no-unused-vars
 function Rocket(fileName, x, y){
 	var me = this;
-	this.x = x;
-	this.y = y;
+	
 	this.width = 90;
 	this.height = 90;
 	this.radius = me.width/2;
 	this.type = "rocket";
-	this.dx = me.x + me.width/2;
-	this.dy = me.y + me.height/2;
+	this.x = x + me.width/2;
+	this.y = y + me.height/2;
 	this.shouldDraw = true;
 	
 	this.loaded = false;
@@ -30,27 +29,35 @@ function Rocket(fileName, x, y){
 		me.loaded = true;
 	};  
 	this.image.src = fileName;
-	
+	/**
+	 * 
+	 * @param {number} newX New x position
+	 * @param {number} newY New y position
+	 */
 	this.setPosition = function(newX, newY){
-		me.x = newX;
-		me.y = newY;
+		me.x = newX + me.width/2;
+		me.y = newY + me.height/2;
 	};
-	
+	/**
+	 * 
+	 * @param {number} step one frame displacement
+	 */
 	this.move = function(step){
 		me.x += Math.cos(me.angle - Math.PI/2) * step;
 		me.y += Math.sin(me.angle - Math.PI/2) * step;
 	
-		if(me.x < zeroCordinate) {
-			me.x = 0;
+		if(me.x < me.width/2) {
+			me.x = me.width/2;
 		}
-		if(me.y < zeroCordinate) {
-			me.y = 0;
+		if(me.y < me.height/2) {
+			me.y = me.height/2;
 		}
-		if(me.x > canvasWidth - me.width) {
-			me.x = canvasWidth - me.width;
+		
+		if(me.x > canvasWidth - me.width/2) {
+			me.x = canvasWidth - me.width/2;
 		}
-		if(me.y > canvasHeight - me.height) {
-			me.y = canvasHeight - me.height;
+		if(me.y > canvasHeight - me.height/2) {
+			me.y = canvasHeight - me.height/2;
 		}
 	};
 	
@@ -73,39 +80,42 @@ function Rocket(fileName, x, y){
 			me.changeAngle(me.angleStep);
 		}
 		
-		me.dx = me.x + me.width/2;
-		me.dy = me.y + me.height/2;
+		/*me.dx = me.x + me.width/2;
+		me.dy = me.y + me.height/2;*/
 		
 	};
 	
 	this.draw = function(ctx){
 		if(me.loaded){
-			var widthCenter = me.width/2;
-			var heightCenter = me.height/2;
+			/*var widthCenter = me.width/2;
+			var heightCenter = me.height/2;*/
 			
 			ctx.save();
-			ctx.translate(me.x + widthCenter, me.y + heightCenter);
+			ctx.translate(me.x, me.y);
 			ctx.rotate(me.angle);
-			ctx.drawImage(me.image, -widthCenter, -heightCenter, me.width, me.height);
+			ctx.drawImage(me.image, -me.width/2, -me.height/2, me.width, me.height);
 			ctx.restore();		
 		}
 	};
 }
 
 // eslint-disable-next-line no-unused-vars
-function Bullet(params){
+function Bullet(config){
+	//this = {};
 	var me = this;
-	this.x = params[0];
-	this.y = params[1];
+	
 	this.speed = 6;
 	this.width = 18;
 	this.height = 18;
+	
+	this.x = this.getStartX(config.x, config.angle, config.rocketLength);
+	this.y = this.getStartY(config.y, config.angle, config.rocketLength);
 	this.radius = me.width/2;
 	this.type = "bullet";
 	
-	this.dx = me.x + me.width/2;
-	this.dy = me.y + me.height/2;
-	this.angle = params[2];
+	/*this.dx = me.x + me.width/2;
+	this.dy = me.y + me.height/2;*/
+	this.angle = config.angle;
 	this.loaded = false;
 	this.shouldDraw = true;
 		
@@ -114,32 +124,52 @@ function Bullet(params){
 		me.loaded = true;
 	};  
 	this.image.src = "images/bullet.png";
-	
-	this.move = function(){
-		me.x = me.x + Math.cos(me.angle - Math.PI/2) * me.speed;
-		me.y = me.y + Math.sin(me.angle - Math.PI/2) * me.speed;
-		me.dx = me.x + me.width/2;
-		me.dy = me.y + me.height/2;
-	};
-	
-	this.update = function(){
-		me.move();
-		if(me.x > canvasWidth * 2 || me.y > canvasHeight *2 ||me.x < -canvasWidth || me.y < -canvasHeight) {
-		me.shouldDraw = false;	
-		}
-	};
-	
-	this.draw = function(ctx){
-		if(me.loaded){
-			var widthCenter = me.width/2;
-			var heightCenter = me.height/2;
-			
-			ctx.save();
-			ctx.translate(me.x + widthCenter, me.y + heightCenter);
-			ctx.rotate(me.angle);
-			ctx.drawImage(me.image, -widthCenter, -heightCenter, me.width, me.height);
-			ctx.restore();		
-		}
-	};
+	drawElements.push(this);
+	collisionDetection.push(this);
+	//return this;
 }
+
+/**
+ * 
+ * @param {number} parentCenterX center of parent x
+ * @param {number} parentAngle [[Description]]
+ * @param {number} parentHalfLength [[Description]]
+ * @return {number} [[Description]]
+*/
+Bullet.prototype.getStartX = function(parentCenterX, parentAngle, parentHalfLength) {
+	return parentCenterX + Math.cos(parentAngle - Math.PI/2) * parentHalfLength;
+};
+Bullet.prototype.getStartY = function(parentCenterY, parentAngle, parentHalfLength) {
+	return parentCenterY + Math.sin(parentAngle - Math.PI/2) * parentHalfLength;
+};
+
+/*Bullet.prototype.getStartX = function(parentCenterX, parentAngle, parentHalfLength) {
+	return parentCenterX - this.width/2 + Math.cos(parentAngle - Math.PI/2) * parentHalfLength;
+};
+Bullet.prototype.getStartY = function(parentCenterY, parentAngle, parentHalfLength) {
+	return parentCenterY - this.height/2 + Math.sin(parentAngle - Math.PI/2) * parentHalfLength;
+};*/
+
+Bullet.prototype.move = function(){
+	this.x = this.x + Math.cos(this.angle - Math.PI/2) * this.speed;
+	this.y = this.y + Math.sin(this.angle - Math.PI/2) * this.speed;
+};
+	
+Bullet.prototype.update = function(){
+	this.move();
+	if(this.x > canvasWidth * 2 || this.y > canvasHeight *2 ||this.x < -canvasWidth || this.y < -canvasHeight) {
+	this.shouldDraw = false;	
+	}
+};
+	
+Bullet.prototype.draw = function(ctx){
+	if(this.loaded){	
+		ctx.save();
+		ctx.translate(this.x, this.y);
+		ctx.rotate(this.angle);
+		ctx.drawImage(this.image, -this.width/2, -this.height/2, this.width, this.height);
+		ctx.restore();		
+	}
+};
+
 
