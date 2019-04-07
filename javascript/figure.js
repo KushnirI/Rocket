@@ -42,6 +42,26 @@ Figure.prototype.setFillColor = function(newColor){
 Figure.prototype.update = function() {
 		
 };
+
+Figure.prototype.draw = function(ctx){
+    ctx.save();
+    ctx.beginPath();
+    ctx.strokeStyle = this.strokeColor;
+    ctx.lineWidth = this.lineWidth;
+
+	this.drawFigure(ctx);
+
+    if(this.shouldFill){
+        ctx.fillStyle = this.fillColor;
+        ctx.fill();
+    }
+    ctx.stroke();
+    ctx.restore();
+};
+
+Figure.prototype.drawFigure = function (){
+
+};
 	
 	
 	

@@ -25,23 +25,11 @@ CircleBot.prototype.getDamage = function(){
 };
 
 CircleBot.prototype.type = "bot";
-	
-CircleBot.prototype.draw = function(ctx){
-	ctx.beginPath();
-	ctx.save();
-	ctx.strokeStyle = this.strokeColor;
-	ctx.lineWidth = this.lineWidth;
-	// eslint-disable-next-line no-magic-numbers
-	ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
-				
-	if(this.shouldFill){
-		ctx.fillStyle = this.fillColor;
-		ctx.fill();
-	}
-	ctx.stroke();
-	ctx.restore();
+
+CircleBot.prototype.drawFigure = function (ctx){
+    // eslint-disable-next-line no-magic-numbers
+    ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
 };
-	
 
 
 
