@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-function Rocket(){
+function Rocket(x, y, fileName){
 	var me = this;
 	
 	ImgObject.apply(this, arguments);
@@ -44,6 +44,8 @@ function Rocket(){
 		}
 	};
 
+    drawElements.push(this);
+	collisionDetection.push(this);
 }
 
 Rocket.prototype = Object.create(ImgObject.prototype);

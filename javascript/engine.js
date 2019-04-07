@@ -12,11 +12,6 @@ var updateTime = 40;
 var drawElements = [];
 var collisionDetection = [];
 
-// eslint-disable-next-line no-magic-numbers
-var rocket = new Rocket(50, 50, "images/rocket.png");
-// eslint-disable-next-line no-unused-vars
-var rocketLives = new RocketLives();
-
 function collisionCheck() {
 	var obj1, obj2, dist;
 	for(var i = 0; i < collisionDetection.length; i++) {
@@ -109,9 +104,10 @@ var supplies = [
 	new Ammo(270, 340)
 ];
 
-drawElements.push(rocket);
-collisionDetection.push(rocket);
-// z-index?
+// eslint-disable-next-line no-magic-numbers
+var rocket = new Rocket(50, 50, "images/rocket.png");
+// eslint-disable-next-line no-unused-vars
+var rocketLives = new RocketLives();
 
 
 setInterval(function(){
@@ -137,6 +133,7 @@ var keyCodes = {
 //how should I name "ruF"?
 
 document.addEventListener("keydown", function(event){
+	//keyCode is deprecated, use event.key instead
 	rocket.setKey(event.keyCode, true);
 });
 

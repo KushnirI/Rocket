@@ -22,7 +22,7 @@ CircleBot.prototype.getDamage = function(){
 	}
 	this.hp--;
 	this.setFillColor("red");
-}
+};
 
 CircleBot.prototype.type = "bot";
 	
