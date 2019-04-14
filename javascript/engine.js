@@ -12,10 +12,12 @@ var updateTime = 40;
 var drawElements = [];
 var collisionDetection = [];
 
-// eslint-disable-next-line no-magic-numbers
-var rocket = new Rocket(50, 50, "images/rocket.png");
+// eslint-disable-next-line
+var rocket = new Rocket(50, 50, "images/battlecruiser1.png");
 // eslint-disable-next-line no-unused-vars
-var rocketLives = new RocketLives();
+var rocketLifes = new RocketLifes();
+
+var filtrationRequired = false;
 
 function collisionCheck() {
 	var obj1, obj2, dist;
@@ -32,23 +34,27 @@ function collisionCheck() {
 				if( dist < obj1.radius + obj2.radius){
 					
 					if(obj1.type === "bot" && obj2.type === "bullet"){
-						obj1.getDamage();
+						obj1.applyDamage();
 						obj2.shouldDraw = false;
+						filtrationRequired = true;
 					}
 					
 					if(obj1.type === "bot" && obj2.type === "rocket"){
-						obj1.getDamage();
-						obj2.getDamage();
+						obj1.applyDamage();
+						obj2.applyDamage();
+						filtrationRequired = true;
 					}
 					
 					if(obj1.type === "medicine" && obj2.type === "rocket"){
 						obj1.shouldDraw = false;
-						obj2.getLive();
+						obj2.applyLife();
+						filtrationRequired = true;
 					}
 					
 					if(obj1.type === "ammo" && obj2.type === "rocket"){
 						obj1.shouldDraw = false;
-						obj2.getAmmo();
+						obj2.applyAmmo();
+						filtrationRequired = true;
 					}
 				}
 			}
@@ -57,16 +63,14 @@ function collisionCheck() {
 }
 
 function removeUseless() {
-	var filtredDraw = drawElements.filter(function(item){
+	drawElements = drawElements.filter(function(item){
 		return item.shouldDraw;
 	});
 	
-	var filtredCollision = collisionDetection.filter(function(item){
+	collisionDetection = collisionDetection.filter(function(item){
 		return item.shouldDraw;
 	});
-	
-	drawElements = filtredDraw;
-	collisionDetection = filtredCollision;
+	shouldRemove = false;
 	
 }
 
@@ -109,14 +113,12 @@ var supplies = [
 	new Ammo(270, 340)
 ];
 
-drawElements.push(rocket);
-collisionDetection.push(rocket);
-// z-index?
+
 
 
 setInterval(function(){
 	// eslint-disable-next-line no-magic-numbers
-	ctx.clearRect(0, 0, 700, 450);
+	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 	
 	collisionCheck();
 	
@@ -125,95 +127,9 @@ setInterval(function(){
 		drawElements[i].draw(ctx);
 	}
 	
-	removeUseless();
+	if(filtrationRequired){
+		removeUseless();
+	}
 	
 },updateTime);
-
-
-var keyCodes = {
-	f : 102,
-	ruF : 1072
-}
-//how should I name "ruF"?
-
-document.addEventListener("keydown", function(event){
-	rocket.setKey(event.keyCode, true);
-});
-
-document.addEventListener("keyup", function(event){
-	rocket.setKey(event.keyCode, false);
-});
-
-document.addEventListener("keypress", function(event){
-	if(event.keyCode === keyCodes.f || event.keyCode === keyCodes.ruF){
-		// eslint-disable-next-line no-magic-numbers
-		if(rocket.bullets > 0){
-			// eslint-disable-next-line no-magic-numbers
-			fireEvent("fire", {x: rocket.x, y: rocket.y, angle: rocket.angle, rocketLength: rocket.height/2});
-			
-		} else {
-			console.log("no bullets!");
-		}
-	}
-});
-
-
-var events = {
-	fire : [],
-	gameOver : []
-};
-
-addListener("fire", 
-	function(config){
-		new Bullet(config);
-	}
-);
-
-addListener("fire",
-			function(){
-				console.log("fire sound!");
-			}
-);
-addListener("fire",
-			function(){
-				rocket.bullets--;
-				rocket.showBulletsAmount()
-			}
-);
-
-/**
- * 
- * @param {string} eventName Name of event
- * @param {function} functionCallback Add function which should be done by event
- */
-function addListener(eventName,functionCallback) {
-	events[eventName].push(functionCallback);
-}
-
-/**
- * 
- * @param {string} eventName Name of event
- * @param {function} params Arguments for functionCallback
- */
-function fireEvent(eventName, params){
-	for(var i = 0; i < events[eventName].length; i++) {
-		events[eventName][i](params);
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

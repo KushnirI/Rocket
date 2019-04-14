@@ -1,5 +1,12 @@
+/**
+ * 
+ * @constructor
+ * @param {number} x Position by X
+ * @param {number} y Position by Y
+ * @param {string} fileName Source to img file
+ */
 // eslint-disable-next-line no-unused-vars
-function ImgObject(x, y, fileName){
+function Texture(x, y, fileName){
 	var me = this;
 	// eslint-disable-next-line no-magic-numbers
 	this.x = x + this.width/2;
@@ -16,16 +23,18 @@ function ImgObject(x, y, fileName){
 		
 		me.loaded = true;
 	};  
-	this.image.src = fileName;
+	this.image.src = fileName || this.imgSrc;
 }
 
+Texture.prototype = Object.create(Observable.prototype);
+Texture.prototype.constructor = Texture;
 
 	/**
 	 * 
 	 * @param {number} newX New x position
 	 * @param {number} newY New y position
 	 */
-ImgObject.prototype.setPosition = function(newX, newY){
+Texture.prototype.setPosition = function(newX, newY){
 	// eslint-disable-next-line no-magic-numbers
 	this.x = newX + this.width/2;
 	// eslint-disable-next-line no-magic-numbers
@@ -35,7 +44,7 @@ ImgObject.prototype.setPosition = function(newX, newY){
 	 * 
 	 * @param {number} step one frame displacement
 	 */
-ImgObject.prototype.move = function(step){
+Texture.prototype.move = function(step){
 	// eslint-disable-next-line no-magic-numbers
 	this.x += Math.cos(this.angle - Math.PI/2) * step;
 	// eslint-disable-next-line no-magic-numbers
@@ -44,7 +53,7 @@ ImgObject.prototype.move = function(step){
 };
 	
 	
-ImgObject.prototype.draw = function(ctx){
+Texture.prototype.draw = function(ctx){
 	if(this.loaded){				
 		ctx.save();
 		ctx.translate(this.x, this.y);
@@ -55,12 +64,21 @@ ImgObject.prototype.draw = function(ctx){
 	}
 };
 
-ImgObject.prototype.update = function(){
+Texture.prototype.update = function(){
 	
 };
 
-ImgObject.prototype.width = 30;
-ImgObject.prototype.height = 30;
+/**
+ * 
+ @param {string} source Source to img file
+ */
+Texture.prototype.setImgSrc = function(source){
+	this.image.src = source;
+};
+
+Texture.prototype.width = 30;
+Texture.prototype.height = 30;
+
 
 
 

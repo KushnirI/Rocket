@@ -1,3 +1,12 @@
+/**
+ * 
+ * @constructor
+ * @param {number} x Position by X
+ * @param {number} y Position by Y
+ * @param {number} width Obj width
+ * @param {number} height Obj height
+ * @param {string} color Filling color
+ */
 // eslint-disable-next-line no-unused-vars
 function Rectangle(x, y, width, height, color){
 
@@ -13,19 +22,7 @@ function Rectangle(x, y, width, height, color){
 Rectangle.prototype = Object.create(Figure.prototype);
 Rectangle.prototype.constructor = Rectangle;
 
-Rectangle.prototype.draw = function(ctx){
-	ctx.save();
-	ctx.beginPath();
-	ctx.strokeStyle = this.strokeColor;
-	ctx.lineWidth = this.lineWidth;
+Rectangle.prototype.drawFgure = function(ctx){
 	ctx.rect(this.x, this.y, this.width, this.height);
-		
-	if(this.shouldFill){
-		ctx.fillStyle = this.fillColor;
-		ctx.fill();
-	}
-	ctx.stroke();
-	ctx.restore();
 };
-
 

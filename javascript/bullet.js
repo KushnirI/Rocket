@@ -1,28 +1,30 @@
+/**
+ * 
+ * @constructor
+ * @param {object} config Start bullet configurations
+ */
 // eslint-disable-next-line no-unused-vars
 function Bullet(config){
 	//this = {};
 		
-	ImgObject.apply(this, arguments);
+	DrawAndCollision.apply(this, arguments);
 	
 	this.angle = config.angle;
 	
 	this.x = this.getStartX(config.x, config.angle, config.rocketLength);
 	this.y = this.getStartY(config.y, config.angle, config.rocketLength);
 	
-	this.image.src = "images/bullet.png";
-	
-	drawElements.push(this);
-	collisionDetection.push(this);
 	//return this;
 }
 
-Bullet.prototype = Object.create(ImgObject.prototype);
+Bullet.prototype = Object.create(Texture.prototype);
 Bullet.prototype.constructor = Bullet;
 
 Bullet.prototype.width = 18;
 Bullet.prototype.height = 18;
 Bullet.prototype.speed = 6;
 Bullet.prototype.type = "bullet";
+Bullet.prototype.imgSrc = "images/bullet.png";
 
 /**
  * 
@@ -55,6 +57,7 @@ Bullet.prototype.update = function(){
 	this.shouldDraw = false;	
 	}
 };
+
 	
 
 

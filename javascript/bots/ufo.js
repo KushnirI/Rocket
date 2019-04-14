@@ -1,3 +1,12 @@
+/**
+ * 
+ * @constructor
+ * @param {number} x Position by X
+ * @param {number} y Position by Y
+ * @param {number} width Obj width
+ * @param {number} height Obj height
+ * @param {object} colorParams Custom color parameters for health bar
+ */
 // eslint-disable-next-line no-unused-vars
 function UfoBot(x, y, width, height, colorParams){
 	var me = this;
@@ -5,26 +14,23 @@ function UfoBot(x, y, width, height, colorParams){
 	this.width = width;
 	this.height = height;
 	
-	ImgObject.apply(this, arguments);
+	DrawAndCollision.apply(this, arguments);
 	
-	this.currentHp = 5;
-	this.image.src = "images/bot.png";
+	this.currentHealthPoints = 5;
+	this.setImgSrc("images/bot.png");
 	// eslint-disable-next-line no-magic-numbers
 	this.healthBar = new HealthBar(me.x - me.width/2, me.y + me.height/2, me.width, 10, colorParams)
 	
-	drawElements.push(this);
-	collisionDetection.push(this);
-	
 }
 
-UfoBot.prototype = Object.create(ImgObject.prototype);
+UfoBot.prototype = Object.create(Texture.prototype);
 UfoBot.prototype.constructor = UfoBot;
 
 UfoBot.prototype.type = "bot";
-UfoBot.prototype.startHp = 5;
+UfoBot.prototype.startHealthPoints = 5;
 
 UfoBot.prototype.update = function (){
-	this.healthBar.animation();
+	this.healthBar.animate();
 }
 
 UfoBot.prototype.draw = function(ctx){
@@ -38,26 +44,12 @@ UfoBot.prototype.draw = function(ctx){
 	}
 };
 
-UfoBot.prototype.getDamage = function() {
-	this.healthBar.getDamage(this.startHp);
+UfoBot.prototype.applyDamage = function() {
+	this.healthBar.applyDamage(this.startHealthPoints);
 	// eslint-disable-next-line no-magic-numbers	
-	if ( --this.currentHp === 0 ) {
+	if ( --this.currentHealthPoints === 0 ) {
 		this.shouldDraw = false;
 	}
+	
+	this.fireEvent("botApplyDamage");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

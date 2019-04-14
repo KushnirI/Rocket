@@ -1,3 +1,9 @@
+/**
+ * 
+ * @constructor
+ * @param {number} x Position by X
+ * @param {number} y Position by 
+ */
 // eslint-disable-next-line no-unused-vars
 function Figure(x, y){
 		
@@ -25,7 +31,10 @@ Figure.prototype.setStrokeColor = function(newColor){
 Figure.prototype.setLineWidth = function(newWidth){
 	this.lineWidth = newWidth;
 };
-
+/**
+ * 
+ * @param {boolean} boolean Enable/Disable figure filling
+ */
 Figure.prototype.enableFill = function(boolean){
 	this.shouldFill = boolean;
 };
@@ -42,38 +51,19 @@ Figure.prototype.setFillColor = function(newColor){
 Figure.prototype.update = function() {
 		
 };
+
+Figure.prototype.draw = function(ctx){
+	ctx.save();
+	ctx.beginPath();
+	ctx.strokeStyle = this.strokeColor;
+	ctx.lineWidth = this.lineWidth;
 	
-	
-	
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	this.drawFgure(ctx)
+		
+	if(this.shouldFill){
+		ctx.fillStyle = this.fillColor;
+		ctx.fill();
+	}
+	ctx.stroke();
+	ctx.restore();
+};

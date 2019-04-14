@@ -1,3 +1,10 @@
+/**
+ * 
+ * @constructor
+ * @param {number} x Position by X
+ * @param {number} y Position by Y
+ * @param {number} radius Obj radius
+ */
 // eslint-disable-next-line no-unused-vars
 function CircleBot(x, y, radius){
 	
@@ -8,7 +15,7 @@ function CircleBot(x, y, radius){
 	this.setStrokeColor("grey");
 	this.setFillColor("grey");
 	
-	this.hp = 1;
+	this.healthPoints = 1;
 	drawElements.push(this);
 	collisionDetection.push(this);
 }
@@ -16,49 +23,19 @@ function CircleBot(x, y, radius){
 CircleBot.prototype = Object.create(Figure.prototype);
 CircleBot.prototype.constructor = CircleBot;
 
-CircleBot.prototype.getDamage = function(){
-	if(!this.hp){
+CircleBot.prototype.applyDamage = function(){
+	// eslint-disable-next-line no-magic-numbers
+	if(this.healthPoints <= 0){
 		this.shouldDraw = false;
 	}
-	this.hp--;
+	this.healthPoints--;
 	this.setFillColor("red");
+	
 }
 
 CircleBot.prototype.type = "bot";
 	
-CircleBot.prototype.draw = function(ctx){
-	ctx.beginPath();
-	ctx.save();
-	ctx.strokeStyle = this.strokeColor;
-	ctx.lineWidth = this.lineWidth;
+CircleBot.prototype.drawFgure = function(ctx){
 	// eslint-disable-next-line no-magic-numbers
 	ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
-				
-	if(this.shouldFill){
-		ctx.fillStyle = this.fillColor;
-		ctx.fill();
-	}
-	ctx.stroke();
-	ctx.restore();
 };
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,12 +1,12 @@
 // eslint-disable-next-line no-unused-vars
-function Rocket(){
+function Rocket(x, y, fileName){
 	var me = this;
 	
-	ImgObject.apply(this, arguments);
+	DrawAndCollision.apply(this, arguments);
 	
 	this.angle = 0;
 	
-	this.bullets = 3;
+	this.bulletsAmount = 3;
 	
 	this.showBulletsAmount();
 	
@@ -43,10 +43,39 @@ function Rocket(){
 			me.y = canvasHeight - me.height/2;
 		}
 	};
+	
+	this.on("fire", 
+		function(config){
+			new Bullet(config);
+			me.bulletsAmount--;
+			me.showBulletsAmount()
+		}
+	);
+	
+	document.addEventListener("keydown", function(event){
+		me.setKey(event.keyCode, true);
+	});
 
+	document.addEventListener("keyup", function(event){
+		me.setKey(event.keyCode, false);
+	});
+
+	document.addEventListener("keypress", function(event){
+		// eslint-disable-next-line no-magic-numbers
+		if(event.keyCode === 32){
+			// eslint-disable-next-line no-magic-numbers
+			if(me.bulletsAmount > 0){
+				// eslint-disable-next-line no-magic-numbers
+				me.fireEvent("fire", {x: rocket.x, y: rocket.y, angle: rocket.angle, rocketLength: rocket.height/2});
+
+			} else {
+				console.log("no bullets!");
+			}
+		}
+	});
 }
 
-Rocket.prototype = Object.create(ImgObject.prototype);
+Rocket.prototype = Object.create(Texture.prototype);
 Rocket.prototype.constructor = Rocket;
 
 Rocket.prototype.width = 90;
@@ -89,38 +118,26 @@ Rocket.prototype.setKey = function(keyCode, status){
 	this.controls["key" + keyCode] = status;
 };
 
-Rocket.prototype.getDamage = function(){
+Rocket.prototype.applyDamage = function(){
 	// eslint-disable-next-line no-magic-numbers
 	this.setPosition(50, 50);
 	this.angle = 0;
 	// eslint-disable-next-line no-magic-numbers	
-	rocketLives.changeLiveAmount( -1 );
+	rocketLifes.changeLifesAmount( -1 );
 };
 
-Rocket.prototype.getLive = function(){
+Rocket.prototype.applyLife = function(){
 	// eslint-disable-next-line no-magic-numbers
-	rocketLives.changeLiveAmount( 1 );
+	rocketLifes.changeLifesAmount( 1 );
 };
 
 Rocket.prototype.showBulletsAmount = function(){
-	console.log("bullets amount are " + this.bullets);
+	console.log("bullets amount is: " + this.bulletsAmount);
 };
 
-Rocket.prototype.getAmmo = function(){
-	this.bullets += 7;
+Rocket.prototype.applyAmmo = function(){
+	this.bulletsAmount += 7;
 	this.showBulletsAmount();
 };
-
-
-
-
-
-
-
-
-
-
-
-
 
 
