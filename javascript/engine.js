@@ -13,7 +13,7 @@ var drawElements = [];
 var collisionDetection = [];
 
 // eslint-disable-next-line
-var rocket = new Rocket(50, 50, "images/battlecruiser1.png");
+var rocket = new Rocket(50, 50, "images/battlecruiser.png");
 // eslint-disable-next-line no-unused-vars
 var rocketLifes = new RocketLifes();
 
@@ -132,4 +132,3 @@ setInterval(function(){
 	}
 	
 },updateTime);
-
