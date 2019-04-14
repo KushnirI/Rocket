@@ -5,9 +5,13 @@
   "main": "js.js",
   "scripts": {
     "lint": "eslint ./javascript",
-    "precommit": ["lint"]
+    "precommit": [
+      "lint"
+    ]
   },
-  "pre-commit": [ "lint" ],
+  "pre-commit": [
+    "lint"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {

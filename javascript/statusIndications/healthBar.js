@@ -55,7 +55,7 @@ HealthBar.prototype.animate = function() {
 		this.animationLine.x += this.animationStep;
 		this.animationLine.width -= this.animationStep;
 	}	
-}
+};
 
 HealthBar.prototype.draw = function(ctx){
 	this.liveLine.draw(ctx);
