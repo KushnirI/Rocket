@@ -2,7 +2,7 @@
 function Rocket(x, y, fileName){
 	var me = this;
 	
-	DrawAndCollision.apply(this, arguments);
+	CollisionTexture.apply(this, arguments);
 	
 	this.angle = 0;
 	
@@ -44,35 +44,41 @@ function Rocket(x, y, fileName){
 		}
 	};
 	
-	this.on("fire", 
-		function(config){
-			new Bullet(config);
-			me.bulletsAmount--;
-			me.showBulletsAmount()
-		}
-	);
-	
-	document.addEventListener("keydown", function(event){
-		me.setKey(event.keyCode, true);
-	});
+	this.on({"notify:gameStarted" : function(){
+			
+			document.addEventListener("keydown", function(event){
+				me.setKey(event.keyCode, true);
+			});
 
-	document.addEventListener("keyup", function(event){
-		me.setKey(event.keyCode, false);
-	});
+			document.addEventListener("keyup", function(event){
+				me.setKey(event.keyCode, false);
+			});
 
-	document.addEventListener("keypress", function(event){
-		// eslint-disable-next-line no-magic-numbers
-		if(event.keyCode === 32){
-			// eslint-disable-next-line no-magic-numbers
-			if(me.bulletsAmount > 0){
+			document.addEventListener("keypress", function(event){
 				// eslint-disable-next-line no-magic-numbers
-				me.fireEvent("fire", {x: rocket.x, y: rocket.y, angle: rocket.angle, rocketLength: rocket.height/2});
+				if(event.keyCode === 32){
+					// eslint-disable-next-line no-magic-numbers
+					if(me.bulletsAmount > 0){
+						// eslint-disable-next-line no-magic-numbers
+						me.makeFire({x: rocket.x, y: rocket.y, angle: 		rocket.angle, rocketLength: rocket.height/2});
+				
 
-			} else {
-				console.log("no bullets!");
-			}
+					} else {
+						console.log("no bullets!");
+					}
+				}
+			});		
 		}
 	});
+	
+	this.makeFire = function(config) {
+		new Bullet(config);
+		me.bulletsAmount--;
+		me.showBulletsAmount()
+		me.fireEvent("notify:rocket.fired", "arguments ", "added ", "using apply");
+	};
+	
+	
 }
 
 Rocket.prototype = Object.create(Texture.prototype);

@@ -22,8 +22,11 @@ function Texture(x, y, fileName){
 	this.image.onload = function(){
 		
 		me.loaded = true;
-	};  
-	this.image.src = fileName || this.imgSrc;
+	};
+	
+	//if fileName is not added then imgSrc from child object should be used 
+	this.setImgSrc(fileName || this.imgSrc);
+	
 }
 
 Texture.prototype = Object.create(Observable.prototype);
@@ -64,6 +67,7 @@ Texture.prototype.draw = function(ctx){
 	}
 };
 
+//Stub method, should be overridden in child classes
 Texture.prototype.update = function(){
 	
 };
@@ -78,6 +82,8 @@ Texture.prototype.setImgSrc = function(source){
 
 Texture.prototype.width = 30;
 Texture.prototype.height = 30;
+
+Texture.prototype.selected = false;
 
 
 

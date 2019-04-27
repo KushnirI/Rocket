@@ -1,8 +1,7 @@
 // eslint-disable-next-line no-unused-vars
-function Ammo(){
+function Ammo(x, y){
 		
-	DrawAndCollision.apply(this, arguments);
-
+	CollisionTexture.call(this, x, y, "images/ammo.png");
 	
 }
 
@@ -10,6 +9,5 @@ Ammo.prototype = Object.create(Texture.prototype);
 Ammo.prototype.constructor = Ammo;
 
 Ammo.prototype.type = "ammo";
-Ammo.prototype.imgSrc = "images/ammo.png";
 Ammo.prototype.width = 45;
 Ammo.prototype.height = 45;

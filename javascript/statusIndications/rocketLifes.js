@@ -42,9 +42,9 @@ RocketLifes.prototype.draw = function(ctx){
 
 /**
  * 
- * @param {number} amount Lifes amount displacement
+ * @param {number} increment Lifes amount displacement
  */
-RocketLifes.prototype.changeLifesAmount = function(amount){
-	this.lives += amount;
+RocketLifes.prototype.changeLifesAmount = function(increment){
+	this.lives += increment;
 }
 	

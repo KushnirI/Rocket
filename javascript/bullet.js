@@ -2,12 +2,16 @@
  * 
  * @constructor
  * @param {object} config Start bullet configurations
+ * @param {number} config.x Center of parent x
+ * @param {number} config.y Center of parent y
+ * @param {number} config.angle Parent direction
+ * @param {number} config.rocketLength Distance from parent center to parent end
  */
 // eslint-disable-next-line no-unused-vars
 function Bullet(config){
 	//this = {};
 		
-	DrawAndCollision.apply(this, arguments);
+	CollisionTexture.apply(this, arguments);
 	
 	this.angle = config.angle;
 	

@@ -8,6 +8,10 @@ canvas.height = canvasHeight;
 var ctx = canvas.getContext("2d");
 
 var updateTime = 40;
+// eslint-disable-next-line no-unused-vars
+var gameLaunched = false;
+// eslint-disable-next-line no-unused-vars
+var selectedItem = false;
 
 var drawElements = [];
 var collisionDetection = [];

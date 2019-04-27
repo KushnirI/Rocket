@@ -1,21 +1,27 @@
 function Observable() {
-
+	this.test = "test"
 }
 
 /**
  * 
- * @param {string} eventName Name of event
- * @param {function} functionCallback Add function which should be done by event
+ * @param {object} params Contains function names and function callback for each name
  */
-Observable.prototype.on = function (eventName, functionCallback) {
-	events.addListener(eventName, functionCallback);
+Observable.prototype.on = function ( params ) {
+	for( key in params){
+		events.addListener(key, params[key]);
+	}
+	
 };
 
 /**
  * 
  * @param {string} eventName Name of event
- * @param {function} params Arguments for functionCallback
+ * params Arguments for functionCallback
  */
-Observable.prototype.fireEvent = function (eventName, params){
+Observable.prototype.fireEvent = function (eventName){
+	var args = [].slice.call(arguments);
+	// eslint-disable-next-line no-magic-numbers
+	var params = args.slice(1)
 	events.fireEvent(eventName, params);
 };
+

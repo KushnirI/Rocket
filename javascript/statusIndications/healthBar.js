@@ -33,6 +33,7 @@ function HealthBar(x, y, width, height, colorParams){
 	// eslint-disable-next-line no-magic-numbers
 	this.damageLine = new Rectangle(x, y, 0, height, this.colors.damage);
 	
+	this.healthPoints = 3;
 }
 
 HealthBar.prototype.animationStep = 1;
@@ -41,9 +42,9 @@ HealthBar.prototype.animationStep = 1;
  * 
  * @param {number} healthPoints Amount of health points
  */
-HealthBar.prototype.applyDamage = function(healthPoints){
-	this.damageLine.width += this.width/healthPoints;
-	this.animationLine.width += this.width/healthPoints;
+HealthBar.prototype.applyDamage = function(){
+	this.damageLine.width += this.width/this.healthPoints;
+	this.animationLine.width += this.width/this.healthPoints;
 };
 
 HealthBar.prototype.animate = function() {
@@ -61,4 +62,15 @@ HealthBar.prototype.draw = function(ctx){
 	this.liveLine.draw(ctx);
 	this.damageLine.draw(ctx);
 	this.animationLine.draw(ctx);
+};
+
+/**
+ * 
+ * @param {number} newX New x position
+ * @param {number} newY New y position
+ */
+HealthBar.prototype.setPosition = function(newX, newY){
+	this.liveLine.setPosition(newX, newY);
+	this.animationLine.setPosition(newX, newY);
+	this.damageLine.setPosition(newX, newY);
 };
