@@ -1,5 +1,5 @@
 function Events (){
-	this._eventsArr = [];
+	this._events = {};
 }
 
 /**
@@ -8,11 +8,11 @@ function Events (){
  * @param {function} functionCallback Add function which should be done by event
  */
 Events.prototype.addListener = function (eventName, functionCallback) {
-	if( !this._eventsArr[eventName] ) {
+	if( !this._events[eventName] ) {
 		this.addEvent(eventName);
 	}
 	
-	this._eventsArr[eventName].push(functionCallback);
+	this._events[eventName].push(functionCallback);
 };
 
 /**
@@ -20,7 +20,7 @@ Events.prototype.addListener = function (eventName, functionCallback) {
  * @param {string} eventName Name of event
  */
 Events.prototype.addEvent = function ( eventName ) {
-	this._eventsArr[eventName] = [];
+	this._events[eventName] = [];
 }
 
 /**
@@ -29,40 +29,15 @@ Events.prototype.addEvent = function ( eventName ) {
  * @param {function} params Arguments for functionCallback
  */
 Events.prototype.fireEvent = function (eventName, params){
-	for(var i = 0; i < this._eventsArr[eventName].length; i++) {
-		events._eventsArr[eventName][i](params);
+	var listeners = this._events[eventName];
+	
+	for(var i = 0; i < listeners.length; i++) {
+
+		listeners[i].apply(this, params);
 	}
 }
 
-
-var events = new Events;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// eslint-disable-next-line no-unused-vars
+var events = new Events();
 
 

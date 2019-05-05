@@ -8,12 +8,16 @@ canvas.height = canvasHeight;
 var ctx = canvas.getContext("2d");
 
 var updateTime = 40;
+// eslint-disable-next-line no-unused-vars
+var gameLaunched = false;
+// eslint-disable-next-line no-unused-vars
+var selectedItem = null;
 
 var drawElements = [];
 var collisionDetection = [];
 
 // eslint-disable-next-line
-var rocket = new Rocket(50, 50, "images/battlecruiser1.png");
+var rocket = new Rocket(50, 50, "images/battlecruiser.png");
 // eslint-disable-next-line no-unused-vars
 var rocketLifes = new RocketLifes();
 
@@ -114,8 +118,6 @@ var supplies = [
 ];
 
 
-
-
 setInterval(function(){
 	// eslint-disable-next-line no-magic-numbers
 	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -132,4 +134,3 @@ setInterval(function(){
 	}
 	
 },updateTime);
-

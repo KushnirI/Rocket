@@ -22,7 +22,7 @@ function Rectangle(x, y, width, height, color){
 Rectangle.prototype = Object.create(Figure.prototype);
 Rectangle.prototype.constructor = Rectangle;
 
-Rectangle.prototype.drawFgure = function(ctx){
+Rectangle.prototype.drawFigure = function(ctx){
 	ctx.rect(this.x, this.y, this.width, this.height);
 };
 

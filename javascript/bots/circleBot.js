@@ -35,7 +35,7 @@ CircleBot.prototype.applyDamage = function(){
 
 CircleBot.prototype.type = "bot";
 	
-CircleBot.prototype.drawFgure = function(ctx){
+CircleBot.prototype.drawFigure = function(ctx){
 	// eslint-disable-next-line no-magic-numbers
 	ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
 };

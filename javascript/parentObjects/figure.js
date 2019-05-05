@@ -52,13 +52,24 @@ Figure.prototype.update = function() {
 		
 };
 
+/**
+ * 
+ * @param {number} newX New x position
+ * @param {number} newY New y position
+ */
+Figure.prototype.setPosition = function(newX, newY){
+	this.x = newX;
+	this.y = newY;
+};
+
 Figure.prototype.draw = function(ctx){
 	ctx.save();
 	ctx.beginPath();
 	ctx.strokeStyle = this.strokeColor;
 	ctx.lineWidth = this.lineWidth;
 	
-	this.drawFgure(ctx)
+	//Abstract method to draw required figure between save and restore of context
+	this.drawFigure(ctx)
 		
 	if(this.shouldFill){
 		ctx.fillStyle = this.fillColor;
