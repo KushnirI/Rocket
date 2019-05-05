@@ -83,7 +83,6 @@ Texture.prototype.setImgSrc = function(source){
 Texture.prototype.width = 30;
 Texture.prototype.height = 30;
 
-Texture.prototype.selected = false;
 
 
 

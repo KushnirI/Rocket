@@ -10,7 +10,7 @@ function StartGame () {
 
 
 StartGame.prototype = Object.create(Observable.prototype);
-StartGame.prototype.constructor = Sounds;
+StartGame.prototype.constructor = StartGame;
 
 // eslint-disable-next-line no-unused-vars
 var startGame = new StartGame();

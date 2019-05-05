@@ -11,7 +11,7 @@ var updateTime = 40;
 // eslint-disable-next-line no-unused-vars
 var gameLaunched = false;
 // eslint-disable-next-line no-unused-vars
-var selectedItem = false;
+var selectedItem = null;
 
 var drawElements = [];
 var collisionDetection = [];
@@ -116,8 +116,6 @@ var supplies = [
 	// eslint-disable-next-line no-magic-numbers
 	new Ammo(270, 340)
 ];
-
-
 
 
 setInterval(function(){

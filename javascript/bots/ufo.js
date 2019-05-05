@@ -31,12 +31,21 @@ UfoBot.prototype.startHealthPoints = 5;
 
 UfoBot.prototype.update = function (){
 	this.healthBar.animate();
-	if(this.selected === true){
-		// eslint-disable-next-line no-magic-numbers
-		this.healthBar.setPosition(this.x - this.width/2, this.y + this.height/2)
-	}
-	
 }
+
+/**
+ * 
+ * @param {number} newX New x position
+ * @param {number} newY New y position
+ */
+UfoBot.prototype.setPosition = function(newX, newY){
+	// eslint-disable-next-line no-magic-numbers
+	this.x = newX + this.width/2;
+	// eslint-disable-next-line no-magic-numbers
+	this.y = newY + this.height/2;
+	this.healthBar.setPosition(newX , newY + this.height)
+};
+
 
 UfoBot.prototype.draw = function(ctx){
 	if(this.loaded){

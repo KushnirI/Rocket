@@ -58,8 +58,8 @@ Figure.prototype.update = function() {
  * @param {number} newY New y position
  */
 Figure.prototype.setPosition = function(newX, newY){
-	this.x = newX
-	this.y = newY
+	this.x = newX;
+	this.y = newY;
 };
 
 Figure.prototype.draw = function(ctx){
@@ -68,7 +68,7 @@ Figure.prototype.draw = function(ctx){
 	ctx.strokeStyle = this.strokeColor;
 	ctx.lineWidth = this.lineWidth;
 	
-	// Each child object should have his own drawFigure method to be able to draw required figure between save and restore of context
+	//Abstract method to draw required figure between save and restore of context
 	this.drawFigure(ctx)
 		
 	if(this.shouldFill){

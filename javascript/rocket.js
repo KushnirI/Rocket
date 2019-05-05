@@ -44,7 +44,7 @@ function Rocket(x, y, fileName){
 		}
 	};
 	
-	this.on({"notify:gameStarted" : function(){
+	this.startGame = function(){
 			
 			document.addEventListener("keydown", function(event){
 				me.setKey(event.keyCode, true);
@@ -60,7 +60,7 @@ function Rocket(x, y, fileName){
 					// eslint-disable-next-line no-magic-numbers
 					if(me.bulletsAmount > 0){
 						// eslint-disable-next-line no-magic-numbers
-						me.makeFire({x: rocket.x, y: rocket.y, angle: 		rocket.angle, rocketLength: rocket.height/2});
+						me.shoot({x: me.x, y: me.y, angle: 		me.angle, rocketLength: me.height/2});
 				
 
 					} else {
@@ -68,10 +68,11 @@ function Rocket(x, y, fileName){
 					}
 				}
 			});		
-		}
-	});
+		};
 	
-	this.makeFire = function(config) {
+	this.on({ "notify:gameStarted" : this.startGame });
+	
+	this.shoot = function(config) {
 		new Bullet(config);
 		me.bulletsAmount--;
 		me.showBulletsAmount()

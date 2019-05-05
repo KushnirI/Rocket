@@ -7,12 +7,8 @@ function CollisionTexture () {
 	
 	this.on({"notify:gameStarted" : function () {
 			collisionDetection.push(me);
-		
 		} 
 	});
-	if (gameLaunched === true){
-		collisionDetection.push(this);
-	}
 }
 
 CollisionTexture.prototype = Object.create(Observable.prototype);

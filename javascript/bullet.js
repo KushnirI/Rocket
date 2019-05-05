@@ -18,6 +18,7 @@ function Bullet(config){
 	this.x = this.getStartX(config.x, config.angle, config.rocketLength);
 	this.y = this.getStartY(config.y, config.angle, config.rocketLength);
 	
+	collisionDetection.push(this);
 	//return this;
 }
 

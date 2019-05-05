@@ -1,9 +1,11 @@
 function Sounds () {
+	var me = this;
+	
 	this.fireMessage = "fire sound!";
-	var fireSound = function(a, b, c) {
+	this.fireSound = function(a, b, c) {
 		console.log(a + b + c);
 		console.log(this.fireMessage);
-	}.bind(this);
+	}
 	
 	this.botDamagedMessage = "Bot was damaged";
 	
@@ -12,9 +14,9 @@ function Sounds () {
 	}.bind(this);
 	
 	this.on({
-		"notify:rocket.fired" : fireSound, 
+		"notify:rocket.fired" : me.fireSound, 
 		"notify:bot.damaged" : botDamagedSound
-			});
+			}, this);
 	
 }
 
