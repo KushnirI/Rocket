@@ -1,13 +1,11 @@
 // eslint-disable-next-line no-unused-vars
 function Rocket(x, y, fileName){
-	var me = this;
+	let me = this;
 	
 	CollisionTexture.apply(this, arguments);
-	
-	this.angle = 0;
-	
+
+	this.sprite.rotation = 0;
 	this.bulletsAmount = 3;
-	
 	this.showBulletsAmount();
 	
 	this.controls = {
@@ -17,35 +15,44 @@ function Rocket(x, y, fileName){
 		key40 : false
 	};
 	
-	var parentMove = this.move;
+	let parentMove = this.move;
 	
 	this.move = function(){
 		parentMove.apply(this, arguments);
 		
 		// eslint-disable-next-line no-magic-numbers
-		if(me.x < me.width/2) {
+		if(me.globalX < me.width/2) {
 			// eslint-disable-next-line no-magic-numbers
-			me.x = me.width/2;
+			me.globalX = me.width/2;
+			// eslint-disable-next-line no-magic-numbers
+			me.sprite.x = me.width/2;
 		}
 		// eslint-disable-next-line no-magic-numbers
-		if(me.y < me.height/2) {
+		if(me.globalY < me.height/2) {
 			// eslint-disable-next-line no-magic-numbers
-			me.y = me.height/2;
+			me.globalY = me.height/2;
+			// eslint-disable-next-line no-magic-numbers
+			me.sprite.y = me.height/2;
 		}
 		// eslint-disable-next-line no-magic-numbers
-		if(me.x > canvasWidth - me.width/2) {
+		if(me.globalX > 700 - me.width/2) {
 			// eslint-disable-next-line no-magic-numbers
-			me.x = canvasWidth - me.width/2;
+			me.globalX = 700 - me.width/2;
+			// eslint-disable-next-line no-magic-numbers
+			me.sprite.x = 700 - me.width/2;
 		}
 		// eslint-disable-next-line no-magic-numbers
-		if(me.y > canvasHeight - me.height/2) {
+		if(me.globalY > 450 - me.height/2) {
 			// eslint-disable-next-line no-magic-numbers
-			me.y = canvasHeight - me.height/2;
+			me.globalY = 450 - me.height/2;
+			// eslint-disable-next-line no-magic-numbers
+			me.sprite.y = 450 - me.height/2;
 		}
 	};
 	
 	this.startGame = function(){
-			
+			this.addToCollisiion();
+		
 			document.addEventListener("keydown", function(event){
 				me.setKey(event.keyCode, true);
 			});
@@ -58,10 +65,9 @@ function Rocket(x, y, fileName){
 				// eslint-disable-next-line no-magic-numbers
 				if(event.keyCode === 32){
 					// eslint-disable-next-line no-magic-numbers
-					if(me.bulletsAmount > 0){
+					if(me.bulletsAmount > 0 && rocketLives.lives > 0){
 						// eslint-disable-next-line no-magic-numbers
-						me.shoot({x: me.x, y: me.y, angle: 		me.angle, rocketLength: me.height/2});
-				
+						me.shoot({x: me.sprite.x, y: me.sprite.y, angle: 		me.sprite.rotation, rocketLength: me.sprite.height/2});
 
 					} else {
 						console.log("no bullets!");
@@ -75,7 +81,7 @@ function Rocket(x, y, fileName){
 	this.shoot = function(config) {
 		new Bullet(config);
 		me.bulletsAmount--;
-		me.showBulletsAmount()
+		me.showBulletsAmount();
 		me.fireEvent("notify:rocket.fired", "arguments ", "added ", "using apply");
 	};
 	
@@ -89,8 +95,8 @@ Rocket.prototype.width = 90;
 Rocket.prototype.height = 90;
 
 Rocket.prototype.type = "rocket";
-Rocket.prototype.speed = 4;
-Rocket.prototype.angleStep = 0.1;
+Rocket.prototype.speed = 2;
+Rocket.prototype.angleStep = 0.05;
 
 Rocket.prototype.update = function(){
 		
@@ -113,13 +119,13 @@ Rocket.prototype.update = function(){
  * @param {number} step Amount of angle displacement 
  */
 Rocket.prototype.changeAngle = function(step){
-	this.angle += step;
+	this.sprite.rotation += step;
 };
 
 /**
  * 
  * @param {number} keyCode Keyboard keyCode
- * @param {boolen} status Enable/disable
+ * @param {boolean} status Enable/disable
  */
 Rocket.prototype.setKey = function(keyCode, status){
 	this.controls["key" + keyCode] = status;
@@ -128,14 +134,14 @@ Rocket.prototype.setKey = function(keyCode, status){
 Rocket.prototype.applyDamage = function(){
 	// eslint-disable-next-line no-magic-numbers
 	this.setPosition(50, 50);
-	this.angle = 0;
+	this.sprite.rotation = 0;
 	// eslint-disable-next-line no-magic-numbers	
-	rocketLifes.changeLifesAmount( -1 );
+	rocketLives.changeLivesAmount( -1 );
 };
 
-Rocket.prototype.applyLife = function(){
+Rocket.prototype.applyLive = function(){
 	// eslint-disable-next-line no-magic-numbers
-	rocketLifes.changeLifesAmount( 1 );
+	rocketLives.changeLivesAmount( 1 );
 };
 
 Rocket.prototype.showBulletsAmount = function(){

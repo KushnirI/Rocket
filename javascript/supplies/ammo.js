@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 function Ammo(x, y){
 		
-	CollisionTexture.call(this, x, y, "images/ammo.png");
+	CollisionTexture.call(this, x, y, "ammo2.png");
 	
 }
 

@@ -7,26 +7,25 @@
  */
 // eslint-disable-next-line no-unused-vars
 function Texture(x, y, fileName){
-	var me = this;
+
+	this.sprite = new PIXI.Sprite(id[fileName]);
+	this.sprite.anchor.x = 0.5;
+	this.sprite.anchor.y = 0.5;
+	
 	// eslint-disable-next-line no-magic-numbers
-	this.x = x + this.width/2;
+	this.sprite.x = x + this.width/2;
 	// eslint-disable-next-line no-magic-numbers
-	this.y = y + this.height/2;
+	this.sprite.y = y + this.height/2;
+
+	this.globalX = this.sprite.x;
+	this.globalY = this.sprite.y;
+	
+	this.sprite.width = this.width;
+	this.sprite.height = this.height;
+	
 	// eslint-disable-next-line no-magic-numbers
 	this.radius = this.width/2;
-	
-	this.shouldDraw = true;
-	this.loaded = false;
-	
-	this.image = new Image();
-	this.image.onload = function(){
-		
-		me.loaded = true;
-	};
-	
-	//if fileName is not added then imgSrc from child object should be used 
-	this.setImgSrc(fileName || this.imgSrc);
-	
+
 }
 
 Texture.prototype = Object.create(Observable.prototype);
@@ -39,9 +38,12 @@ Texture.prototype.constructor = Texture;
 	 */
 Texture.prototype.setPosition = function(newX, newY){
 	// eslint-disable-next-line no-magic-numbers
-	this.x = newX + this.width/2;
+	this.sprite.x = newX + this.width/2;
 	// eslint-disable-next-line no-magic-numbers
-	this.y = newY + this.height/2;
+	this.sprite.y = newY + this.height/2;
+
+	this.globalX = this.sprite.x;
+	this.globalY = this.sprite.y;
 };
 	/**
 	 * 
@@ -49,35 +51,18 @@ Texture.prototype.setPosition = function(newX, newY){
 	 */
 Texture.prototype.move = function(step){
 	// eslint-disable-next-line no-magic-numbers
-	this.x += Math.cos(this.angle - Math.PI/2) * step;
+	this.sprite.x += Math.cos(this.sprite.rotation - Math.PI/2) * step;
 	// eslint-disable-next-line no-magic-numbers
-	this.y += Math.sin(this.angle - Math.PI/2) * step;
-	
-};
-	
-	
-Texture.prototype.draw = function(ctx){
-	if(this.loaded){				
-		ctx.save();
-		ctx.translate(this.x, this.y);
-		ctx.rotate(this.angle);
-		// eslint-disable-next-line no-magic-numbers
-		ctx.drawImage(this.image, -this.width/2, -this.height/2,this.width, this.height);
-		ctx.restore();		
-	}
-};
+	this.sprite.y += Math.sin(this.sprite.rotation - Math.PI/2) * step;
 
+	this.globalX = this.sprite.x;
+	this.globalY = this.sprite.y;
+	
+};
+	
 //Stub method, should be overridden in child classes
 Texture.prototype.update = function(){
 	
-};
-
-/**
- * 
- @param {string} source Source to img file
- */
-Texture.prototype.setImgSrc = function(source){
-	this.image.src = source;
 };
 
 Texture.prototype.width = 30;

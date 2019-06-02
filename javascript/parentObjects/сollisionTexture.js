@@ -1,14 +1,15 @@
 // eslint-disable-next-line no-unused-vars
 function CollisionTexture () {
-	var me = this;
 	Texture.apply(this, arguments);
-	
+
 	drawElements.push(this);
+	app.stage.addChild(this.sprite);
 	
-	this.on({"notify:gameStarted" : function () {
-			collisionDetection.push(me);
-		} 
-	});
+	this.addToCollisiion = function () {
+			collisionDetection.push(this);
+	};
+	
+	this.on({"notify:gameStarted" : this.addToCollisiion});
 }
 
 CollisionTexture.prototype = Object.create(Observable.prototype);

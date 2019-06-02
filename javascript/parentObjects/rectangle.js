@@ -1,28 +1,29 @@
 /**
- * 
+ *
  * @constructor
  * @param {number} x Position by X
  * @param {number} y Position by Y
  * @param {number} width Obj width
  * @param {number} height Obj height
- * @param {string} color Filling color
+ * @param {number} color Filling color in HEX
  */
 // eslint-disable-next-line no-unused-vars
-function Rectangle(x, y, width, height, color){
+function Rectangle(x, y, width, height, color) {
 
-	Figure.apply(this, arguments);
-	
-	this.width = width;
-	this. height = height;
-	
-	this.setStrokeColor("black");
-	this.setFillColor(color);
+    this.sprite = new PIXI.Graphics();
+    // eslint-disable-next-line no-magic-numbers
+    this.sprite.lineStyle(1, 0x000000, 1);
+    this.sprite.beginFill(color);
+    // eslint-disable-next-line no-magic-numbers
+    this.sprite.drawRect(0, 0, width, height);
+    this.sprite.endFill();
+    this.sprite.position.set(x, y);
+
 }
 
-Rectangle.prototype = Object.create(Figure.prototype);
-Rectangle.prototype.constructor = Rectangle;
+Rectangle.prototype.update = function() {
 
-Rectangle.prototype.drawFigure = function(ctx){
-	ctx.rect(this.x, this.y, this.width, this.height);
 };
+
+
 

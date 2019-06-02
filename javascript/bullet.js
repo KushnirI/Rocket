@@ -10,13 +10,13 @@
 // eslint-disable-next-line no-unused-vars
 function Bullet(config){
 	//this = {};
-		
-	CollisionTexture.apply(this, arguments);
-	
-	this.angle = config.angle;
-	
+
 	this.x = this.getStartX(config.x, config.angle, config.rocketLength);
 	this.y = this.getStartY(config.y, config.angle, config.rocketLength);
+
+	CollisionTexture.call(this, this.x, this.y, "bullet.png");
+
+	this.sprite.rotation = config.angle;
 	
 	collisionDetection.push(this);
 	//return this;
@@ -27,9 +27,8 @@ Bullet.prototype.constructor = Bullet;
 
 Bullet.prototype.width = 18;
 Bullet.prototype.height = 18;
-Bullet.prototype.speed = 6;
+Bullet.prototype.speed = 3;
 Bullet.prototype.type = "bullet";
-Bullet.prototype.imgSrc = "images/bullet.png";
 
 /**
  * 
@@ -40,7 +39,7 @@ Bullet.prototype.imgSrc = "images/bullet.png";
 */
 Bullet.prototype.getStartX = function(parentCenterX, parentAngle, parentHalfLength) {
 	// eslint-disable-next-line no-magic-numbers
-	return parentCenterX + Math.cos(parentAngle - Math.PI/2) * parentHalfLength;
+	return parentCenterX - this.width/2 + Math.cos(parentAngle - Math.PI/2) * parentHalfLength;
 };
 /**
  * 
@@ -51,15 +50,17 @@ Bullet.prototype.getStartX = function(parentCenterX, parentAngle, parentHalfLeng
 */
 Bullet.prototype.getStartY = function(parentCenterY, parentAngle, parentHalfLength) {
 	// eslint-disable-next-line no-magic-numbers
-	return parentCenterY + Math.sin(parentAngle - Math.PI/2) * parentHalfLength;
+	return parentCenterY - this.height/2 + Math.sin(parentAngle - Math.PI/2) * parentHalfLength;
 };
 
 	
 Bullet.prototype.update = function(){
 	this.move(this.speed);
 	// eslint-disable-next-line no-magic-numbers
-	if(this.x > canvasWidth * 2 || this.y > canvasHeight *2 ||this.x < -canvasWidth || this.y < -canvasHeight) {
-	this.shouldDraw = false;	
+	if(this.globalX > 1000  || this.globalY > 1000 ||this.globalX  < -200 || this.globalY < -200) {
+
+	this.sprite.visible = false;
+	filtrationRequired = true;
 	}
 };
 
