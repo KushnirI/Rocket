@@ -10,20 +10,21 @@
 // eslint-disable-next-line no-unused-vars
 function Rectangle(x, y, width, height, color) {
 
-    this.sprite = new PIXI.Graphics();
+    PIXI.Graphics.call(this);
+
     // eslint-disable-next-line no-magic-numbers
-    this.sprite.lineStyle(1, 0x000000, 1);
-    this.sprite.beginFill(color);
+    this.lineStyle(1, 0x000000, 1);
+    this.beginFill(color);
     // eslint-disable-next-line no-magic-numbers
-    this.sprite.drawRect(0, 0, width, height);
-    this.sprite.endFill();
-    this.sprite.position.set(x, y);
+    this.drawRect(0, 0, width, height);
+    this.endFill();
+    this.position.set(x, y);
 
 }
+Rectangle.prototype = Object.create(PIXI.Graphics.prototype);
+Rectangle.prototype.constructor = Rectangle;
 
-Rectangle.prototype.update = function() {
 
-};
 
 
 

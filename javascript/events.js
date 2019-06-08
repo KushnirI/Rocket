@@ -21,7 +21,7 @@ Events.prototype.addListener = function (eventName, eventListener) {
  */
 Events.prototype.addEvent = function ( eventName ) {
 	this._events[eventName] = [];
-}
+};
 
 /**
  * 
@@ -37,7 +37,7 @@ Events.prototype.fireEvent = function (eventName, params){
 		
 		handler.apply(listener, params);
 	}
-}
+};
 
 // eslint-disable-next-line no-unused-vars
 let events = new Events();

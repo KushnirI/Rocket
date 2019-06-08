@@ -9,10 +9,9 @@ PIXI.Loader.shared
 	.add("./images/sheet.json")
 	.load(setup);
 
-let id,
-	state,
-	play,
+let textures,
 	background,
+	// eslint-disable-next-line no-unused-vars
 	rocket,
 	rocketLives,
 	// eslint-disable-next-line no-unused-vars
@@ -27,50 +26,48 @@ let gameLaunched = false;
 // eslint-disable-next-line no-unused-vars
 let selectedItem = null;
 
-let drawElements = [];
+let renderLoop = [];
 let collisionDetection = [];
 let filtrationRequired = false;
 
 function setup () {
-	id = PIXI.Loader.shared.resources["./images/sheet.json"].textures;
+	textures = PIXI.Loader.shared.resources["./images/sheet.json"].textures;
 	
-	background = new PIXI.Sprite(id["space.png"]);
+	background = new PIXI.Sprite(textures["space.png"]);
 	app.stage.addChild(background);
 	// eslint-disable-next-line no-magic-numbers
-	rocket = new Rocket(0, 0, "battlecruiser.png");
-	// eslint-disable-next-line no-magic-numbers
-	rocket.setPosition(30, 40);
-	
+	rocket = new Rocket(60, 90, "battlecruiser.png");
+
 	rocketLives = new RocketLives();
 
 	supplies = [
 		// eslint-disable-next-line no-magic-numbers
-		new Medicine(100, 250),
+		new Medicine(120, 270),
 		// eslint-disable-next-line no-magic-numbers
-		new Medicine(520, 230),
+		new Medicine(540, 250),
 		// eslint-disable-next-line no-magic-numbers
-		new Medicine(420, 30),
+		new Medicine(440, 50),
 		// eslint-disable-next-line no-magic-numbers
-		new Ammo(620, 10),
+		new Ammo(660, 50),
 		// eslint-disable-next-line no-magic-numbers
-		new Ammo(600, 380),
+		new Ammo(640, 400),
 		// eslint-disable-next-line no-magic-numbers
-		new Ammo(570, 30),
+		new Ammo(610, 70),
 		// eslint-disable-next-line no-magic-numbers
-		new Ammo(270, 340)
+		new Ammo(290, 380)
 	];
 
 	bots = [
 		// eslint-disable-next-line no-magic-numbers
-		new UfoBot(320, 320, 75, 75),
+		new UfoBot(358, 358, 75, 75),
 		// eslint-disable-next-line no-magic-numbers
-		new UfoBot(180, 320, 50, 50),
+		new UfoBot(205, 345, 50, 50),
 		// eslint-disable-next-line no-magic-numbers
-		new UfoBot(280, 50, 50, 50),
+		new UfoBot(305, 75, 50, 50),
 		// eslint-disable-next-line no-magic-numbers
-		new UfoBot(550, 100, 110, 110, {live : 0x03A9F4, animation : 0xF57C00, damage : 0x000000 }),
+		new UfoBot(605, 155, 110, 110, {live : 0x03A9F4, animation : 0xF57C00, damage : 0x000000 }),
 		// eslint-disable-next-line no-magic-numbers
-		new UfoBot(490, 30, 70, 70),
+		new UfoBot(525, 65, 70, 70),
 		// eslint-disable-next-line no-magic-numbers
 		new CircleBot(180, 200, 20),
 		// eslint-disable-next-line no-magic-numbers
@@ -79,28 +76,27 @@ function setup () {
 		new CircleBot(400, 180, 15)
 	];
 
-		state = play;
-
 	app.ticker.add(delta => gameLoop(delta));
+
+	// eslint-disable-next-line no-unused-vars
+	let dragItems = new DragItems();
+	dragItems.startInteraction();
+
 }
 
 function gameLoop () {
-	state();
-}
-
-play = function () {
-
 	collisionCheck();
 	rocketLives.update();
 
-	for(let i = 0; i < drawElements.length; i++){
-		drawElements[i].update();
+	for(let i = 0; i < renderLoop.length; i++){
+		renderLoop[i].update();
 	}
 
 	if(filtrationRequired){
 		removeUseless();
 	}
-};
+}
+
 
 function collisionCheck() {
 	let obj1, obj2, dist;
@@ -112,13 +108,13 @@ function collisionCheck() {
 			if(i !== j){
 				obj2 = collisionDetection[j];
 				// eslint-disable-next-line no-magic-numbers
-				dist = Math.sqrt(Math.pow(obj1.globalX - obj2.globalX,2) + Math.pow(obj1.globalY - obj2.globalY, 2));
+				dist = Math.sqrt(Math.pow(obj1.x - obj2.x,2) + Math.pow(obj1.y - obj2.y, 2));
 
 				if( dist < obj1.radius + obj2.radius){
 
 					if(obj1.type === "bot" && obj2.type === "bullet"){
 						obj1.applyDamage();
-						obj2.sprite.visible = false;
+						obj2.visible = false;
 						filtrationRequired = true;
 					}
 
@@ -129,13 +125,13 @@ function collisionCheck() {
 					}
 
 					if(obj1.type === "medicine" && obj2.type === "rocket"){
-						obj1.sprite.visible = false;
+						obj1.visible = false;
 						obj2.applyLive();
 						filtrationRequired = true;
 					}
 
 					if(obj1.type === "ammo" && obj2.type === "rocket"){
-						obj1.sprite.visible = false;
+						obj1.visible = false;
 						obj2.applyAmmo();
 						filtrationRequired = true;
 					}
@@ -148,11 +144,11 @@ function collisionCheck() {
 function removeUseless() {
 
 	collisionDetection = collisionDetection.filter(function(item){
-		return item.sprite.visible;
+		return item.visible;
 	});
 
-	drawElements = drawElements.filter(function(item){
-		return item.sprite.visible;
+	renderLoop = renderLoop.filter(function(item){
+		return item.visible;
 	});
 
 	shouldRemove = false;

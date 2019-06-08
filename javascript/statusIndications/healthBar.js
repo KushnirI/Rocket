@@ -10,7 +10,7 @@
 // eslint-disable-next-line no-unused-vars
 function HealthBar(x, y, width, height, colorParams) {
 
-    this.width = width;
+    PIXI.Container.call(this);
 
     this.colors = {
         live: 0x388E3C,
@@ -26,30 +26,25 @@ function HealthBar(x, y, width, height, colorParams) {
         };
     }
 
-    this.bar = new PIXI.Container();
-
-    // eslint-disable-next-line no-magic-numbers
-    this.damageLine = new Rectangle(x, y, width, height, this.colors.damage);
-    // eslint-disable-next-line no-magic-numbers
-    this.animationLine = new Rectangle(x, y, width, height, this.colors.animation);
-    this.liveLine = new Rectangle(x, y, width, height, this.colors.live);
-
-    this.bar.addChild(this.damageLine.sprite);
-    this.bar.addChild(this.animationLine.sprite);
-    this.bar.addChild(this.liveLine.sprite);
+    this.damageLine = this.addChild(new Rectangle(x, y, width, height, this.colors.damage));
+    this.animationLine = this.addChild(new Rectangle(x, y, width, height, this.colors.animation));
+    this.liveLine = this.addChild(new Rectangle(x, y, width, height, this.colors.live));
 
     this.healthPoints = 3;
 }
 
+HealthBar.prototype = Object.create(PIXI.Container.prototype);
+HealthBar.prototype.constructor = HealthBar;
+
 HealthBar.prototype.animationStep = 0.5;
 
 HealthBar.prototype.applyDamage = function () {
-    this.liveLine.sprite.width -= this.width / this.healthPoints;
+    this.liveLine.width -= this.width / this.healthPoints;
 
 };
 
 HealthBar.prototype.animate = function () {
-    if (this.liveLine.sprite.width < this.animationLine.sprite.width) {
-        this.animationLine.sprite.width -= this.animationStep;
+    if (this.liveLine.width < this.animationLine.width) {
+        this.animationLine.width -= this.animationStep;
     }
 };

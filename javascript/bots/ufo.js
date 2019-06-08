@@ -5,37 +5,40 @@
  * @param {number} y Position by Y
  * @param {number} width Obj width
  * @param {number} height Obj height
- * @param {object} colorParams Custom color parameters for health bar
+ * @param {object} [colorParams] Custom color parameters for health bar
  */
 // eslint-disable-next-line no-unused-vars
 function UfoBot(x, y, width, height, colorParams) {
-    let me = this;
 
-    this.width = width;
-    this.height = height;
+    PIXI.Container.call(this);
+
+    this.sprite = new PIXI.Sprite(textures["bot.png"]);
+    this.sprite.width = width;
+    this.sprite.height = height;
+    // eslint-disable-next-line no-magic-numbers
+    this.radius = this.sprite.width/2;
+    // eslint-disable-next-line no-magic-numbers
+    this.sprite.anchor.set(0.5);
     this.currentHealthPoints = 5;
 
-    this.container = new PIXI.Container();
-
-
-    CollisionTexture.call(this, 0, 0, "bot.png");
-
-    this.container.addChild(this.sprite);
+    this.addChild(this.sprite);
 
     // eslint-disable-next-line no-magic-numbers
-    this.healthBar = new HealthBar(me.sprite.x - me.width / 2, me.sprite.y + me.height / 2, me.width, 10, colorParams);
+    this.healthBar = new HealthBar( -width/2, height/2, width, 10, colorParams);
 
     this.healthBar.healthPoints = this.startHealthPoints;
 
-    this.container.addChild(this.healthBar.bar);
+    this.addChild(this.healthBar);
 
-    this.setPosition(x, y);
+    this.position.set(x, y);
 
-    app.stage.addChild(this.container);
+    app.stage.addChild(this);
+    collisionDetection.push(this);
+    renderLoop.push(this);
 
 }
 
-UfoBot.prototype = Object.create(Texture.prototype);
+UfoBot.prototype = Object.create(PIXI.Container.prototype);
 UfoBot.prototype.constructor = UfoBot;
 
 UfoBot.prototype.type = "bot";
@@ -45,18 +48,6 @@ UfoBot.prototype.update = function () {
     this.healthBar.animate();
 };
 
-/**
- *
- * @param {number} newX New x position
- * @param {number} newY New y position
- */
-UfoBot.prototype.setPosition = function (newX, newY) {
-    this.container.position.set(newX, newY);
-    // eslint-disable-next-line no-magic-numbers
-    this.globalX = this.container.x + this.width / 2;
-    // eslint-disable-next-line no-magic-numbers
-    this.globalY = this.container.y + this.height / 2;
-};
 
 UfoBot.prototype.applyDamage = function () {
 
@@ -64,8 +55,38 @@ UfoBot.prototype.applyDamage = function () {
     // eslint-disable-next-line no-magic-numbers
     if (--this.currentHealthPoints === 0) {
         this.sprite.visible = false;
-        this.container.visible = false;
+        this.visible = false;
     }
 
     this.fireEvent("notify:bot.damaged");
+};
+
+/**
+ *
+ * @param {object} params  {Object.<string, function>}
+ */
+UfoBot.prototype.on = function (params) {
+    if (!this.eventHandlers) {
+        this.eventHandlers = {};
+
+    }
+
+    for (let key in params) {
+        if (params.hasOwnProperty(key)) {
+            if (!this.eventHandlers[key]) {
+                events.addListener(key, this);
+            }
+
+            this.eventHandlers[key] = params[key];
+        }
+    }
+};
+
+UfoBot.prototype.fireEvent = function () {
+    let argumentsArray = [].slice.call(arguments);
+    // eslint-disable-next-line no-magic-numbers
+    let eventArgs = argumentsArray.slice(1);
+
+    // eslint-disable-next-line no-magic-numbers
+    events.fireEvent(argumentsArray[0], eventArgs);
 };
