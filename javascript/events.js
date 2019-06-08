@@ -5,14 +5,14 @@ function Events (){
 /**
  * 
  * @param {string} eventName Name of event
- * @param {function} functionCallback Add function which should be done by event
+ * @param {function} eventListener Add function which should be done by event
  */
-Events.prototype.addListener = function (eventName, functionCallback) {
+Events.prototype.addListener = function (eventName, eventListener) {
 	if( !this._events[eventName] ) {
 		this.addEvent(eventName);
 	}
 	
-	this._events[eventName].push(functionCallback);
+	this._events[eventName].push(eventListener);
 };
 
 /**
@@ -21,7 +21,7 @@ Events.prototype.addListener = function (eventName, functionCallback) {
  */
 Events.prototype.addEvent = function ( eventName ) {
 	this._events[eventName] = [];
-}
+};
 
 /**
  * 
@@ -29,15 +29,17 @@ Events.prototype.addEvent = function ( eventName ) {
  * @param {function} params Arguments for functionCallback
  */
 Events.prototype.fireEvent = function (eventName, params){
-	var listeners = this._events[eventName];
+	let listeners = this._events[eventName];
 	
-	for(var i = 0; i < listeners.length; i++) {
-
-		listeners[i].apply(this, params);
+	for(let i = 0; i < listeners.length; i++) {
+		let listener = listeners[i];
+		let handler = listener.eventHandlers[eventName];
+		
+		handler.apply(listener, params);
 	}
-}
+};
 
 // eslint-disable-next-line no-unused-vars
-var events = new Events();
+let events = new Events();
 
 

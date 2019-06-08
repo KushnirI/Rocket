@@ -1,52 +1,44 @@
-function DragItems () {
-	var me = this;
-	
-	this.mouseMove = function (event) {
-		if(selectedItem) {
-			// eslint-disable-next-line no-magic-numbers
-			selectedItem.setPosition(event.offsetX -selectedItem.width/2 || event.offsetX,event.offsetY -selectedItem.height/2 ||event.offsetY);
-		}
-	};
-	
-	this.mouseDown = function (event) {
-		var dist;
-		for( var i = 0; i < drawElements.length; i++) {
-			// eslint-disable-next-line no-magic-numbers
-			dist = Math.sqrt(Math.pow(drawElements[i].x - event.offsetX, 2) + Math.pow(drawElements[i].y -event.offsetY, 2));
+function DragItems() {
+    let me = this;
 
-			if (dist < drawElements[i].radius) {
-				selectedItem = drawElements[i];
-			}
-		}
-	};
-	
-	this.mouseUp = function () {
-		selectedItem = null;
-	}
-	
-	this.startInteraction = function(){
-		document.addEventListener("mousemove", me.mouseMove);
-		document.addEventListener("mousedown", me.mouseDown);
-		document.addEventListener("mouseup", me.mouseUp);
-	}
-	
+    app.stage.hitArea = app.screen;
 
-	
-	this.stopInteraction = function () {
-		document.removeEventListener("mousemove", me.mouseMove);
-		document.removeEventListener("mousedown", me.mouseDown);
-		document.removeEventListener("mouseup", me.mouseUp);
-	};
+    app.stage.on("mousedown", function(event) {
+        let dist, obj;
+        for (let i = 0; i < renderLoop.length; i++) {
 
-	this.on({"notify:gameStarted" : me.stopInteraction });
-	
-	
+            obj = renderLoop[i];
+            // eslint-disable-next-line no-magic-numbers
+            dist = Math.sqrt(Math.pow(obj.x - event.data.global.x, 2) + Math.pow(obj.y - event.data.global.y, 2));
+
+            if (dist < renderLoop[i].radius) {
+                selectedItem = renderLoop[i];
+
+            }
+        }
+    });
+    app.stage.on ("mousemove", function(event) {
+        if (selectedItem) {
+            // eslint-disable-next-line no-magic-numbers
+            selectedItem.position.set(event.data.global.x, event.data.global.y);
+        }
+    });
+    app.stage.on ("mouseup", function() {
+        selectedItem = null;
+    });
+
+    this.startInteraction = function () {
+        app.stage.interactive = true;
+    };
+
+    this.stopInteraction = function () {
+        app.stage.interactive = false;
+    };
+
+    this.on({"notify:gameStarted" : me.stopInteraction });
 }
 
 DragItems.prototype = Object.create(Observable.prototype);
 DragItems.prototype.constructor = DragItems;
 
-// eslint-disable-next-line no-unused-vars
-var dragItems = new DragItems;
-dragItems.startInteraction();
 
