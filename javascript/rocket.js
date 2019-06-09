@@ -1,100 +1,125 @@
-// eslint-disable-next-line no-unused-vars
-function Rocket(x, y, fileName){
-	let me = this;
-	PIXI.Sprite.call(this, textures[fileName]);
-	this.width = 90;
-	this.height = 90;
-	this.rotation = 0;
-	// eslint-disable-next-line no-magic-numbers
-	this.anchor.set(0.5);
-	this.bulletsAmount = 5;
-	this.showBulletsAmount();
-	// eslint-disable-next-line no-magic-numbers
-	this.radius = this.width/2;
+import {Bullet} from "./bullet";
+// import {events} from "./events";
+import {events, textures, renderLoop, collisionDetection, app, rocketLives} from "./engine";
 
-	this.controls = {
-		key37 : false,
-		key38 : false,
-		key39 : false,
-		key40 : false
-	};
-	
-	this.move = function(step){
+
+export class Rocket extends PIXI.Sprite{
+	constructor(x, y, fileName){
+		super(textures[fileName]);
+
+		this.width = 90;
+		this.height = 90;
+		this.rotation = 0;
+		this.selected = false;
+		// eslint-disable-next-line no-magic-numbers
+		this.anchor.set(0.5);
+		this.bulletsAmount = 50;
+		this.showBulletsAmount();
+		// eslint-disable-next-line no-magic-numbers
+		this.radius = this.width/2;
+
+		this.controls = {
+			key37 : false,
+			key38 : false,
+			key39 : false,
+			key40 : false
+		};
+
+		this.type = "rocket";
+		this.speed = 2;
+		this.angleStep = 0.05;
+
+		this.by({ "notify:gameStarted" : this.startGame });
+
+		renderLoop.push(this);
+		app.stage.addChild(this);
+		this.position.set(x, y);
+
+		this.startInteraction()
+	}
+
+	startInteraction() {
+		this.interactive = true;
+		this.on("mousedown", () => {
+			this.selected = true;
+		});
+
+		this.on("mousemove", (event) => {
+			if(this.selected){
+				this.x = event.data.global.x;
+				this.y = event.data.global.y;
+			}
+		});
+
+		this.on("mouseup", () => {
+			this.selected = false;
+		});
+	}
+
+	move(step){
 		// eslint-disable-next-line no-magic-numbers
 		this.x += Math.cos(this.rotation - Math.PI/2) * step;
 		// eslint-disable-next-line no-magic-numbers
 		this.y += Math.sin(this.rotation - Math.PI/2) * step;
-		
-		// eslint-disable-next-line no-magic-numbers
-		if(me.x < me.width/2) {
-			// eslint-disable-next-line no-magic-numbers
-			me.x = me.width/2;
-		}
-		// eslint-disable-next-line no-magic-numbers
-		if(me.y < me.height/2) {
-			// eslint-disable-next-line no-magic-numbers
-			me.y = me.height/2;
-		}
-		// eslint-disable-next-line no-magic-numbers
-		if(me.x > 700 - me.width/2) {
-			// eslint-disable-next-line no-magic-numbers
-			me.x = 700 - me.width/2;
-		}
-		// eslint-disable-next-line no-magic-numbers
-		if(me.y > 450 - me.height/2) {
-			// eslint-disable-next-line no-magic-numbers
-			me.y = 450 - me.height/2;
-		}
-	};
-	
-	this.startGame = function(){
-			collisionDetection.push(this);
-		
-			document.addEventListener("keydown", function(event){
-				me.setKey(event.keyCode, true);
-			});
 
-			document.addEventListener("keyup", function(event){
-				me.setKey(event.keyCode, false);
-			});
+		// eslint-disable-next-line no-magic-numbers
+		if(this.x < this.width/2) {
+			// eslint-disable-next-line no-magic-numbers
+			this.x = this.width/2;
+		}
+		// eslint-disable-next-line no-magic-numbers
+		if(this.y < this.height/2) {
+			// eslint-disable-next-line no-magic-numbers
+			this.y = this.height/2;
+		}
+		// eslint-disable-next-line no-magic-numbers
+		if(this.x > 700 - this.width/2) {
+			// eslint-disable-next-line no-magic-numbers
+			this.x = 700 - this.width/2;
+		}
+		// eslint-disable-next-line no-magic-numbers
+		if(this.y > 450 - this.height/2) {
+			// eslint-disable-next-line no-magic-numbers
+			this.y = 450 - this.height/2;
+		}
+	}
 
-			document.addEventListener("keypress", function(event){
+	startGame() {
+		collisionDetection.push(this);
+		this.interactive = false;
+
+		document.addEventListener("keydown", (event) => {
+			this.setKey(event.keyCode, true);
+		});
+
+		document.addEventListener("keyup", (event) => {
+			this.setKey(event.keyCode, false);
+		});
+
+		document.addEventListener("keypress", (event) =>{
+			// eslint-disable-next-line no-magic-numbers
+			if(event.keyCode === 32){
 				// eslint-disable-next-line no-magic-numbers
-				if(event.keyCode === 32){
+				if(this.bulletsAmount > 0 && rocketLives.lives > 0){
 					// eslint-disable-next-line no-magic-numbers
-					if(me.bulletsAmount > 0 && rocketLives.lives > 0){
-						// eslint-disable-next-line no-magic-numbers
-						me.shoot({x: me.x, y: me.y, angle: me.rotation, rocketLength: me.height/2});
+					this.shoot({x: this.x, y: this.y, angle: this.rotation, rocketLength: this.height/2});
 
-					} else {
-						console.log("no bullets!");
-					}
+				} else {
+					console.log("no bullets!");
 				}
-			});		
-		};
-	
-	this.on({ "notify:gameStarted" : this.startGame });
-	
-	this.shoot = function(config) {
+			}
+		});
+	}
+
+	shoot(config) {
 		new Bullet(config);
-		me.bulletsAmount--;
-		me.showBulletsAmount();
-		me.fireEvent("notify:rocket.fired", "arguments ", "added ", "using apply");
-	};
-	renderLoop.push(this);
-	app.stage.addChild(this);
-	this.position.set(x, y);
-}
+		this.bulletsAmount--;
+		this.showBulletsAmount();
+		this.fireEvent("notify:rocket.fired", "arguments ", "added ", "using apply");
+	}
 
-Rocket.prototype = Object.create(PIXI.Sprite.prototype);
-Rocket.prototype.constructor = Rocket;
+	update(){
 
-Rocket.prototype.type = "rocket";
-Rocket.prototype.speed = 2;
-Rocket.prototype.angleStep = 0.05;
-
-Rocket.prototype.update = function(){
-		
 		if(this.controls.key38){
 			this.move(this.speed);
 		}
@@ -107,74 +132,69 @@ Rocket.prototype.update = function(){
 		if(this.controls.key39){
 			this.changeAngle(this.angleStep);
 		}
-};
-
-/**
- * 
- * @param {number} step Amount of angle displacement 
- */
-Rocket.prototype.changeAngle = function(step){
-	this.rotation += step;
-};
-
-/**
- * 
- * @param {number} keyCode Keyboard keyCode
- * @param {boolean} status Enable/disable
- */
-Rocket.prototype.setKey = function(keyCode, status){
-	this.controls["key" + keyCode] = status;
-};
-
-Rocket.prototype.applyDamage = function(){
-	// eslint-disable-next-line no-magic-numbers
-	this.position.set(60, 90);
-	this.rotation = 0;
-	// eslint-disable-next-line no-magic-numbers	
-	rocketLives.changeLivesAmount( -1 );
-};
-
-Rocket.prototype.applyLive = function(){
-	// eslint-disable-next-line no-magic-numbers
-	rocketLives.changeLivesAmount( 1 );
-};
-
-Rocket.prototype.showBulletsAmount = function(){
-	console.log("bullets amount is: " + this.bulletsAmount);
-};
-
-Rocket.prototype.applyAmmo = function(){
-	this.bulletsAmount += 7;
-	this.showBulletsAmount();
-};
-
-/**
- *
- * @param {object} params  {Object.<string, function>}
- */
-Rocket.prototype.on = function (params) {
-	if (!this.eventHandlers) {
-		this.eventHandlers = {};
-
 	}
 
-	for (let key in params) {
-		if (params.hasOwnProperty(key)) {
-			if (!this.eventHandlers[key]) {
-				events.addListener(key, this);
-			}
+	/**
+	 *
+	 * @param {number} step Amount of angle displacement
+	 */
+	changeAngle(step){
+		this.rotation += step;
+	}
 
-			this.eventHandlers[key] = params[key];
+	/**
+	 *
+	 * @param {number} keyCode Keyboard keyCode
+	 * @param {boolean} status Enable/disable
+	 */
+	setKey(keyCode, status){
+		this.controls["key" + keyCode] = status;
+	}
+
+	applyDamage(){
+		// eslint-disable-next-line no-magic-numbers
+		this.position.set(60, 90);
+		this.rotation = 0;
+		// eslint-disable-next-line no-magic-numbers
+		rocketLives.changeLivesAmount( -1 );
+	}
+
+	applyLive(){
+		// eslint-disable-next-line no-magic-numbers
+		rocketLives.changeLivesAmount( 1 );
+	}
+
+	showBulletsAmount(){
+		console.log("bullets amount is: " + this.bulletsAmount);
+	}
+
+	applyAmmo(){
+		this.bulletsAmount += 7;
+		this.showBulletsAmount();
+	}
+
+	/**
+	 *
+	 * @param {object} params  {Object.<string, function>}
+	 */
+	by(params) {
+		if (!this.eventHandlers) {
+			this.eventHandlers = {};
+		}
+
+		for (let key in params) {
+			if (params.hasOwnProperty(key)) {
+				if (!this.eventHandlers[key]) {
+					events.addListener(key, this);
+				}
+
+				this.eventHandlers[key] = params[key];
+			}
 		}
 	}
-};
 
-Rocket.prototype.fireEvent = function () {
-	let argumentsArray = [].slice.call(arguments);
-	// eslint-disable-next-line no-magic-numbers
-	let eventArgs = argumentsArray.slice(1);
-
-	// eslint-disable-next-line no-magic-numbers
-	events.fireEvent(argumentsArray[0], eventArgs);
-};
+	fireEvent(eventName, ...args) {
+		events.fireEvent(eventName, args);
+	}
+}
 

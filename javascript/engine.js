@@ -1,15 +1,21 @@
-let app = new PIXI.Application({
+import {Medicine} from "./supplies/medicine.js";
+import {CircleBot} from "./bots/circleBot";
+import {UfoBot} from "./bots/ufo";
+import {RocketLives} from "./statusIndications/rocketLifes";
+import {Ammo} from "./supplies/ammo";
+import {Rocket} from "./rocket";
+import {StartGame} from "./startGame";
+import {Events} from "./events";
+import {Sounds} from "./sounds";
+
+export const app = new PIXI.Application({
 	width: 700,
 	height: 450
 });
 
 document.body.appendChild(app.view);
 
-PIXI.Loader.shared
-	.add("./images/sheet.json")
-	.load(setup);
-
-let textures,
+export let textures,
 	background,
 	// eslint-disable-next-line no-unused-vars
 	rocket,
@@ -19,26 +25,37 @@ let textures,
 	// eslint-disable-next-line no-unused-vars
 	bots,
 	// eslint-disable-next-line no-unused-vars
-	shouldRemove;
+	shouldRemove,
+	startGame,
+	events,
+	sounds;
 
 // eslint-disable-next-line no-unused-vars
-let gameLaunched = false;
+export let gameLaunched = false;
 // eslint-disable-next-line no-unused-vars
-let selectedItem = null;
+export let selectedItem = null;
 
-let renderLoop = [];
-let collisionDetection = [];
-let filtrationRequired = false;
+export let renderLoop = [];
+export let collisionDetection = [];
+export let filtrationRequired = false;
+
+PIXI.Loader.shared
+	.add("./images/sheet.json")
+	.load(setup);
 
 function setup () {
 	textures = PIXI.Loader.shared.resources["./images/sheet.json"].textures;
 	
 	background = new PIXI.Sprite(textures["space.png"]);
 	app.stage.addChild(background);
+	events = new Events();
 	// eslint-disable-next-line no-magic-numbers
 	rocket = new Rocket(60, 90, "battlecruiser.png");
 
 	rocketLives = new RocketLives();
+	startGame = new StartGame();
+	sounds = new Sounds();
+
 
 	supplies = [
 		// eslint-disable-next-line no-magic-numbers
@@ -78,13 +95,9 @@ function setup () {
 
 	app.ticker.add(delta => gameLoop(delta));
 
-	// eslint-disable-next-line no-unused-vars
-	let dragItems = new DragItems();
-	dragItems.startInteraction();
-
 }
 
-function gameLoop () {
+const gameLoop = () =>{
 	collisionCheck();
 	rocketLives.update();
 
@@ -95,10 +108,10 @@ function gameLoop () {
 	if(filtrationRequired){
 		removeUseless();
 	}
-}
+};
 
 
-function collisionCheck() {
+const collisionCheck = () =>{
 	let obj1, obj2, dist;
 	for(let i = 0; i < collisionDetection.length; i++) {
 		obj1 = collisionDetection[i];
@@ -139,20 +152,26 @@ function collisionCheck() {
 			}
 		}
 	}
-}
+};
 
-function removeUseless() {
+const removeUseless = () => {
 
-	collisionDetection = collisionDetection.filter(function(item){
-		return item.visible;
-	});
-
-	renderLoop = renderLoop.filter(function(item){
-		return item.visible;
-	});
+	collisionDetection = collisionDetection.filter((item) => item.visible);
+	renderLoop = renderLoop.filter((item) => item.visible);
 
 	shouldRemove = false;
+};
 
-}
+export const gameStart = () => {
+	gameLaunched = true;
+};
+
+export const makeFiltration = () => {
+	filtrationRequired = true;
+};
+
+export const removeRocket = () => {
+	rocket.visible = false;
+};
 
 

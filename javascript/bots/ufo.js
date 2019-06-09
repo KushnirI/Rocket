@@ -1,3 +1,8 @@
+import {HealthBar} from "../statusIndications/healthBar";
+import {events} from "../engine";
+import{textures, renderLoop, collisionDetection, app} from "../engine";
+
+
 /**
  *
  * @constructor
@@ -7,86 +12,95 @@
  * @param {number} height Obj height
  * @param {object} [colorParams] Custom color parameters for health bar
  */
-// eslint-disable-next-line no-unused-vars
-function UfoBot(x, y, width, height, colorParams) {
+export class UfoBot extends PIXI.Container{
+    constructor(x, y, width, height, colorParams) {
+        super();
+        this.sprite = new PIXI.Sprite(textures["bot.png"]);
+        this.sprite.width = width;
+        this.sprite.height = height;
+        // eslint-disable-next-line no-magic-numbers
+        this.radius = this.sprite.width/2;
+        // eslint-disable-next-line no-magic-numbers
+        this.sprite.anchor.set(0.5);
+        this.currentHealthPoints = 5;
 
-    PIXI.Container.call(this);
+        this.addChild(this.sprite);
 
-    this.sprite = new PIXI.Sprite(textures["bot.png"]);
-    this.sprite.width = width;
-    this.sprite.height = height;
-    // eslint-disable-next-line no-magic-numbers
-    this.radius = this.sprite.width/2;
-    // eslint-disable-next-line no-magic-numbers
-    this.sprite.anchor.set(0.5);
-    this.currentHealthPoints = 5;
+        // eslint-disable-next-line no-magic-numbers
+        this.healthBar = new HealthBar( -width/2, height/2, width, 10, colorParams);
 
-    this.addChild(this.sprite);
+        this.startHealthPoints = 5;
+        this.healthBar.healthPoints = this.startHealthPoints;
 
-    // eslint-disable-next-line no-magic-numbers
-    this.healthBar = new HealthBar( -width/2, height/2, width, 10, colorParams);
+        this.addChild(this.healthBar);
+        this.type = "bot";
+        this.position.set(x, y);
 
-    this.healthBar.healthPoints = this.startHealthPoints;
-
-    this.addChild(this.healthBar);
-
-    this.position.set(x, y);
-
-    app.stage.addChild(this);
-    collisionDetection.push(this);
-    renderLoop.push(this);
-
-}
-
-UfoBot.prototype = Object.create(PIXI.Container.prototype);
-UfoBot.prototype.constructor = UfoBot;
-
-UfoBot.prototype.type = "bot";
-UfoBot.prototype.startHealthPoints = 5;
-
-UfoBot.prototype.update = function () {
-    this.healthBar.animate();
-};
-
-
-UfoBot.prototype.applyDamage = function () {
-
-    this.healthBar.applyDamage();
-    // eslint-disable-next-line no-magic-numbers
-    if (--this.currentHealthPoints === 0) {
-        this.sprite.visible = false;
-        this.visible = false;
+        app.stage.addChild(this);
+        collisionDetection.push(this);
+        renderLoop.push(this);
+        this.startInteraction();
+        this.by({ "notify:gameStarted" : () =>  this.interactive = false});
     }
 
-    this.fireEvent("notify:bot.damaged");
-};
+    startInteraction() {
+        this.interactive = true;
+        this.on("mousedown", () => {
+            this.selected = true;
+        });
 
-/**
- *
- * @param {object} params  {Object.<string, function>}
- */
-UfoBot.prototype.on = function (params) {
-    if (!this.eventHandlers) {
-        this.eventHandlers = {};
-
-    }
-
-    for (let key in params) {
-        if (params.hasOwnProperty(key)) {
-            if (!this.eventHandlers[key]) {
-                events.addListener(key, this);
+        this.on("mousemove", (event) => {
+            if(this.selected){
+                this.x = event.data.global.x;
+                this.y = event.data.global.y;
             }
+        });
 
-            this.eventHandlers[key] = params[key];
+        this.on("mouseup", () => {
+            this.selected = false;
+        });
+    }
+
+    update() {
+        this.healthBar.animate();
+    }
+
+    applyDamage() {
+
+        this.healthBar.applyDamage();
+        // eslint-disable-next-line no-magic-numbers
+        if (--this.currentHealthPoints === 0) {
+            this.sprite.visible = false;
+            this.visible = false;
+        }
+
+        this.fireEvent("notify:bot.damaged");
+    }
+
+
+    by(params) {
+        if (!this.eventHandlers) {
+            this.eventHandlers = {};
+
+        }
+
+        for (let key in params) {
+            if (params.hasOwnProperty(key)) {
+                if (!this.eventHandlers[key]) {
+                    events.addListener(key, this);
+                }
+
+                this.eventHandlers[key] = params[key];
+            }
         }
     }
-};
 
-UfoBot.prototype.fireEvent = function () {
-    let argumentsArray = [].slice.call(arguments);
-    // eslint-disable-next-line no-magic-numbers
-    let eventArgs = argumentsArray.slice(1);
+    fireEvent(eventName, ...args) {
+        events.fireEvent(eventName, args);
+    }
+}
 
-    // eslint-disable-next-line no-magic-numbers
-    events.fireEvent(argumentsArray[0], eventArgs);
-};
+
+
+
+
