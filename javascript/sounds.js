@@ -1,27 +1,23 @@
-function Sounds () {
-	this.fireMessage = "fire sound!";
-	this.fireSound = function(a, b, c) {
+import {Observable} from "./parentObjects/observable";
+
+export class Sounds extends Observable{
+	constructor(){
+		super();
+		this.fireMessage = "fire sound!";
+		this.botDamagedMessage = "Bot was damaged";
+
+		this.by({
+			"notify:rocket.fired" : this.fireSound,
+			"notify:bot.damaged" : this.botDamagedSound
+		});
+	}
+
+	botDamagedSound(){
+		console.log(this.botDamagedMessage);
+	}
+
+	fireSound(a, b, c) {
 		console.log(a + b + c);
 		console.log(this.fireMessage);
-	};
-	
-	this.botDamagedMessage = "Bot was damaged";
-	
-	let botDamagedSound = function() {
-		console.log(this.botDamagedMessage);
-	}.bind(this);
-	
-	this.on({
-		"notify:rocket.fired" : this.fireSound, 
-		"notify:bot.damaged" : botDamagedSound
-			});
-	
+	}
 }
-
-
-Sounds.prototype = Object.create(Observable.prototype);
-Sounds.prototype.constructor = Sounds;
-
-// eslint-disable-next-line no-unused-vars
-let sounds = new Sounds();
-

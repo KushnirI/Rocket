@@ -7,7 +7,9 @@
     "lint": "eslint ./javascript",
     "precommit": [
       "lint"
-    ]
+    ],
+    "watch": "webpack --watch",
+    "build": "webpack --config webpack.config.js"
   },
   "pre-commit": [
     "lint"
@@ -25,6 +27,11 @@
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0"
+    "eslint-plugin-standard": "^4.0.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "webpack": "^4.32.2",
+    "webpack-cli": "^3.3.2"
   }
 }
