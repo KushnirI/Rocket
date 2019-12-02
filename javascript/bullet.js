@@ -1,9 +1,6 @@
-import {textures} from "./engine";
-import {renderLoop, collisionDetection, app, makeFiltration} from "./engine";
-
+import {renderLoop, collisionDetection, app, makeFiltration, textures} from "./engine";
 
 /**
- * 
  * @constructor
  * @param {object} config Start bullet configurations
  * @param {number} config.x Center of parent x
@@ -73,7 +70,3 @@ export class Bullet extends PIXI.Sprite{
 
 	}
 }
-
-	
-
-

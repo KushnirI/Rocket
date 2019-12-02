@@ -1,7 +1,5 @@
 import {HealthBar} from "../statusIndications/healthBar";
-import {events} from "../engine";
-import{textures, renderLoop, collisionDetection, app} from "../engine";
-
+import{textures, renderLoop, collisionDetection, app, events} from "../engine";
 
 /**
  *
@@ -15,6 +13,7 @@ import{textures, renderLoop, collisionDetection, app} from "../engine";
 export class UfoBot extends PIXI.Container{
     constructor(x, y, width, height, colorParams) {
         super();
+
         this.sprite = new PIXI.Sprite(textures["bot.png"]);
         this.sprite.width = width;
         this.sprite.height = height;
@@ -70,7 +69,6 @@ export class UfoBot extends PIXI.Container{
         this.healthBar.applyDamage();
         // eslint-disable-next-line no-magic-numbers
         if (--this.currentHealthPoints === 0) {
-            this.sprite.visible = false;
             this.visible = false;
         }
 
@@ -99,8 +97,3 @@ export class UfoBot extends PIXI.Container{
         events.fireEvent(eventName, args);
     }
 }
-
-
-
-
-

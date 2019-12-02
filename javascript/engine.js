@@ -111,7 +111,7 @@ const gameLoop = () =>{
 };
 
 
-const collisionCheck = () =>{
+function collisionCheck () {
 	let obj1, obj2, dist;
 	for(let i = 0; i < collisionDetection.length; i++) {
 		obj1 = collisionDetection[i];
@@ -152,15 +152,14 @@ const collisionCheck = () =>{
 			}
 		}
 	}
-};
+}
 
-const removeUseless = () => {
-
+function removeUseless () {
 	collisionDetection = collisionDetection.filter((item) => item.visible);
 	renderLoop = renderLoop.filter((item) => item.visible);
 
 	shouldRemove = false;
-};
+}
 
 export const gameStart = () => {
 	gameLaunched = true;
@@ -173,5 +172,3 @@ export const makeFiltration = () => {
 export const removeRocket = () => {
 	rocket.visible = false;
 };
-
-

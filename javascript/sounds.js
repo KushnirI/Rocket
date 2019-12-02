@@ -1,6 +1,5 @@
 import {Observable} from "./parentObjects/observable";
 
-
 export class Sounds extends Observable{
 	constructor(){
 		super();
@@ -22,4 +21,3 @@ export class Sounds extends Observable{
 		console.log(this.fireMessage);
 	}
 }
-

@@ -1,11 +1,7 @@
 import {events} from "../engine";
 
 export class Observable {
-    constructor(){
-
-    }
     /**
-     *
      * @param {object} params  {Object.<string, function>}
      */
     by(params) {
@@ -28,7 +24,4 @@ export class Observable {
     fireEvent(eventName, ...args) {
         events.fireEvent(eventName, args);
     }
-
 }
-
-

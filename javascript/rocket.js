@@ -1,7 +1,5 @@
 import {Bullet} from "./bullet";
-// import {events} from "./events";
 import {events, textures, renderLoop, collisionDetection, app, rocketLives} from "./engine";
-
 
 export class Rocket extends PIXI.Sprite{
 	constructor(x, y, fileName){
@@ -165,7 +163,7 @@ export class Rocket extends PIXI.Sprite{
 	}
 
 	showBulletsAmount(){
-		console.log("bullets amount is: " + this.bulletsAmount);
+		console.log("number of bullets: " + this.bulletsAmount);
 	}
 
 	applyAmmo(){
@@ -197,4 +195,3 @@ export class Rocket extends PIXI.Sprite{
 		events.fireEvent(eventName, args);
 	}
 }
-

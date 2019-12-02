@@ -10,9 +10,5 @@ export class StartGame extends Observable{
 			gameStart();
 			this.fireEvent("notify:gameStarted");
 		}
-
 	}
 }
-
-
-

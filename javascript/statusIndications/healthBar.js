@@ -1,6 +1,6 @@
 import {Rectangle} from "../parentObjects/rectangle.js";
+
 /**
- *
  * @constructor
  * @param {number} x Position by X
  * @param {number} y Position by Y

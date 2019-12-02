@@ -70,8 +70,5 @@ export class CircleBot extends PIXI.Graphics{
         this.healthPoints--;
         this.tint = 0xF44336;
         this.alpha = 0.9;
-
     }
 }
-
-

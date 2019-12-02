@@ -26,23 +26,32 @@ export class RocketLives extends PIXI.Container{
         this.visibleLine.addChild(plus);
 
         app.stage.addChild(this.visibleLine);
+
+        this.visibleLine.children.forEach((child) => {
+            child.visible = false;
+        });
+
         this.update();
     }
 
     update() {
 
-        this.visibleLine.children.forEach((children) => {
-            children.visible = false;
-        });
+        let lastVisibleIndex = Math.min(this.visibleLine.children.length, this.lives);
 
-        let MaxAmountOfTextures = Math.min(this.visibleLine.children.length, this.lives);
-
-        for (let i = 0; i < MaxAmountOfTextures; i++) {
+        for (let i = 0; i < lastVisibleIndex; i++) {
             this.visibleLine.children[i].visible = true;
+            // eslint-disable-next-line no-magic-numbers
+            if (lastVisibleIndex < 4){
+                // eslint-disable-next-line no-magic-numbers
+                this.visibleLine.children[i+1].visible = false;
+            }
+
         }
 
         // eslint-disable-next-line no-magic-numbers
         if (this.lives <= 0) {
+            // eslint-disable-next-line no-magic-numbers
+            this.visibleLine.children[0].visible = false;
             console.log("GAME OVER!!!");
             removeRocket();
         }
@@ -57,4 +66,3 @@ export class RocketLives extends PIXI.Container{
         this.update();
     }
 }
-

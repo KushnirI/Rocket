@@ -40,9 +40,3 @@ export class Events {
 		}
 	}
 }
-
-// export let events = new Events();
-
-
-
-

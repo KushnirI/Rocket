@@ -22,8 +22,3 @@ export class Rectangle extends PIXI.Graphics{
     }
 
 }
-
-
-
-
-
